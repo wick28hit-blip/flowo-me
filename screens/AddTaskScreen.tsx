@@ -5,7 +5,7 @@ import { ChevronLeftIcon, BellIcon, PlusIcon } from '../components/icons';
 import { requestNotificationPermission } from '../utils/notifications';
 
 interface AddTaskScreenProps {
-  onNavigate: (screen: Screen) => void;
+  onNavigate: (screen: Screen, property?: Property) => void;
   onAddTask: (task: MaintenanceTask) => void;
   properties: Property[];
   user: User;
@@ -91,7 +91,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
           <section>
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-semibold">Select your property</h2>
-              <button className="flex items-center space-x-1 text-sm font-medium">
+              <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium">
                 <PlusIcon className="w-4 h-4" />
                 <span>Add</span>
               </button>

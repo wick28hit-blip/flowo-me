@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import type { Screen, Property, MaintenanceTask, User } from '../types';
-import { Category } from '../types';
 import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons, SignOutIcon } from '../components/icons';
 import { MaintenancePieChart } from '../components/charts/MaintenanceCharts';
+import { ToggleSwitch } from '../components/ToggleSwitch';
 
 interface HomeScreenProps {
   onNavigate: (screen: Screen, property?: Property) => void;
@@ -10,6 +10,7 @@ interface HomeScreenProps {
   tasks: MaintenanceTask[];
   user: User;
   onSignOut: () => void;
+  onToggleTaskReminder: (taskId: string) => void;
 }
 
 const QuickActionButton: React.FC<{
@@ -27,7 +28,7 @@ const QuickActionButton: React.FC<{
 );
 
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, user, onSignOut }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, user, onSignOut, onToggleTaskReminder }) => {
   const [showSignOut, setShowSignOut] = useState(false);
   
   const PropertyCard: React.FC<{property: Property, isFirst: boolean}> = ({ property, isFirst }) => (
@@ -52,9 +53,42 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
   );
   
   const nextTask = tasks.sort((a,b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime())[0];
-  const daysRemaining = nextTask ? Math.ceil((new Date(nextTask.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24)) : 0;
-  const progress = nextTask ? Math.max(0, 100 - (daysRemaining / 30) * 100) : 0;
   const userName = user.displayName?.split(' ')[0] || 'User';
+  
+  const NextDueTaskCard = () => {
+    if (!nextTask) {
+        return (
+            <div className="bg-gray-800 rounded-2xl p-5 flex flex-col justify-center items-center h-40 text-white">
+                <p className="font-semibold">No upcoming tasks!</p>
+                <p className="text-gray-400 text-sm">All caught up.</p>
+            </div>
+        )
+    }
+    
+    const daysRemaining = Math.ceil((new Date(nextTask.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+    const Icon = CategoryIcons[nextTask.category];
+
+    return (
+        <div className="bg-black rounded-2xl p-5 flex flex-col justify-between h-40 text-white shadow-lg">
+            <div className="flex justify-between items-start">
+                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
+                    <Icon className="w-6 h-6 text-white" />
+                </div>
+                <ToggleSwitch 
+                  isOn={!!nextTask.reminderEnabled} 
+                  onToggle={() => onToggleTaskReminder(nextTask.id)}
+                  aria-label={`Enable reminder for ${nextTask.name}`}
+                />
+            </div>
+            <div>
+                <h3 className="font-bold text-lg">{nextTask.name}</h3>
+                <p className="text-gray-400 text-sm">
+                    {daysRemaining > 1 ? `Due in ${daysRemaining} days` : daysRemaining === 1 ? 'Due tomorrow' : 'Due today'}
+                </p>
+            </div>
+        </div>
+    );
+  };
 
   return (
     <div className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto">
@@ -84,7 +118,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
       <section>
         <div className="flex justify-between items-center mb-3">
           <h2 className="font-semibold">Your Properties</h2>
-          <button className="flex items-center space-x-1 text-sm font-medium">
+          <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium">
             <PlusIcon className="w-4 h-4" />
             <span>Add</span>
           </button>
@@ -94,17 +128,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         </div>
       </section>
 
-      <GlassCard>
-          <h3 className="font-semibold text-sm mb-2">Next Due Task</h3>
-          <p className="text-gray-600 text-xs mb-1">{nextTask?.name || 'No tasks due'}</p>
-          <div className="w-full bg-gray-200 rounded-full h-1.5 mb-1">
-            <div className="bg-black h-1.5 rounded-full" style={{ width: `${progress}%` }}></div>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-500">Due in {daysRemaining} days</span>
-            <span className="text-xs font-semibold">{Math.round(progress)}%</span>
-          </div>
-      </GlassCard>
+      <NextDueTaskCard />
 
       <section>
         <h2 className="font-semibold mb-3">Quick Actions</h2>

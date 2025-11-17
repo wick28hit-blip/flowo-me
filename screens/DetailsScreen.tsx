@@ -5,7 +5,7 @@ import { ChevronLeftIcon, BellIcon, CategoryIcons } from '../components/icons';
 import { MaintenanceBarChart } from '../components/charts/MaintenanceCharts';
 
 interface DetailsScreenProps {
-  onNavigate: (screen: Screen) => void;
+  onNavigate: (screen: Screen, property?: Property) => void;
   property: Property | null;
   tasks: MaintenanceTask[];
   user: User;

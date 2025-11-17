@@ -1,4 +1,4 @@
-export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login';
+export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login' | 'addProperty';
 
 export enum Category {
   FILTERS = 'Filters',
@@ -17,6 +17,7 @@ export interface MaintenanceTask {
   propertyId: string;
   reminderDateTime?: string; // ISO datetime string
   notificationsEnabled?: boolean;
+  reminderEnabled?: boolean;
 }
 
 export interface Property {

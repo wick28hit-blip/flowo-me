@@ -9,9 +9,13 @@ const LoginScreen: React.FC = () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error during Google sign-in:", error);
-      alert("Could not sign in with Google. Please try again.");
+      if (error.code === 'auth/unauthorized-domain') {
+          alert("Authentication failed: This app's domain is not authorized for OAuth operations. Please add it to the list of authorized domains in your Firebase project's authentication settings.");
+      } else {
+          alert("Could not sign in with Google. Please check the console for more details and ensure your Firebase config is correct.");
+      }
     }
   };
 

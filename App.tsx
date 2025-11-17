@@ -7,14 +7,17 @@ import DetailsScreen from './screens/DetailsScreen';
 import AddTaskScreen from './screens/AddTaskScreen';
 import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
+import AddPropertyScreen from './screens/AddPropertyScreen';
 
 import type { Screen, Property, MaintenanceTask, User } from './types';
 import { mockProperties, mockTasks } from './constants';
 import { scheduleNotification } from './utils/notifications';
+import { sendReminderEmail } from './utils/email';
 
 const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('home');
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(mockProperties[0]);
+  const [properties, setProperties] = useState<Property[]>(mockProperties);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(mockProperties[0]?.id || null);
   const [tasks, setTasks] = useState<MaintenanceTask[]>(mockTasks);
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [isSplashActive, setIsSplashActive] = useState(true);
@@ -46,7 +49,7 @@ const App: React.FC = () => {
   const handleNavigate = useCallback((newScreen: Screen, property?: Property) => {
     setScreen(newScreen);
     if (property) {
-      setSelectedProperty(property);
+      setSelectedPropertyId(property.id);
     }
   }, []);
   
@@ -57,21 +60,56 @@ const App: React.FC = () => {
     setTasks(prevTasks => [...prevTasks, task]);
     setScreen('home');
   };
+  
+  const handleAddProperty = (property: Property) => {
+    setProperties(prevProperties => {
+        const newProperties = [...prevProperties, property];
+        if (newProperties.length === 1) {
+            setSelectedPropertyId(property.id);
+        }
+        return newProperties;
+    });
+    setScreen('home');
+  };
 
   const handleSignOut = useCallback(() => {
     signOut(auth);
   }, []);
+  
+  const handleToggleTaskReminder = (taskId: string) => {
+    setTasks(prevTasks => {
+      let taskToUpdate: MaintenanceTask | undefined;
+      const newTasks = prevTasks.map(task => {
+        if (task.id === taskId) {
+          taskToUpdate = { ...task, reminderEnabled: !task.reminderEnabled };
+          return taskToUpdate;
+        }
+        return task;
+      });
+
+      // If reminder was just enabled, send email
+      if (taskToUpdate && taskToUpdate.reminderEnabled) {
+        sendReminderEmail(taskToUpdate);
+      }
+
+      return newTasks;
+    });
+  };
 
   const renderScreen = (currentUser: User) => {
+    const selectedProperty = properties.find(p => p.id === selectedPropertyId) || properties[0] || null;
+
     switch (screen) {
       case 'home':
-        return <HomeScreen onNavigate={handleNavigate} properties={mockProperties} tasks={tasks} user={currentUser} onSignOut={handleSignOut} />;
+        return <HomeScreen onNavigate={handleNavigate} properties={properties} tasks={tasks} user={currentUser} onSignOut={handleSignOut} onToggleTaskReminder={handleToggleTaskReminder} />;
       case 'details':
         return <DetailsScreen onNavigate={handleNavigate} property={selectedProperty} tasks={tasks.filter(t => t.propertyId === selectedProperty?.id)} user={currentUser} />;
       case 'add':
-        return <AddTaskScreen onNavigate={handleNavigate} onAddTask={handleAddTask} properties={mockProperties} user={currentUser} />;
+        return <AddTaskScreen onNavigate={handleNavigate} onAddTask={handleAddTask} properties={properties} user={currentUser} />;
+      case 'addProperty':
+        return <AddPropertyScreen onNavigate={handleNavigate} onAddProperty={handleAddProperty} user={currentUser} />;
       default:
-        return <HomeScreen onNavigate={handleNavigate} properties={mockProperties} tasks={tasks} user={currentUser} onSignOut={handleSignOut} />;
+        return <HomeScreen onNavigate={handleNavigate} properties={properties} tasks={tasks} user={currentUser} onSignOut={handleSignOut} onToggleTaskReminder={handleToggleTaskReminder} />;
     }
   };
 
