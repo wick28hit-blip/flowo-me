@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from '../types';
 import { Category } from '../types';
-import { ChevronLeftIcon, BellIcon, PlusIcon } from '../components/icons';
+import { ChevronLeftIcon, BellIcon, PlusIcon, CalendarIcon } from '../components/icons';
 import { requestNotificationPermission } from '../utils/notifications';
 
 interface AddTaskScreenProps {
@@ -11,6 +11,18 @@ interface AddTaskScreenProps {
   user: User;
   preselectedCategory?: Category | null;
 }
+
+const UserAvatar: React.FC<{ user: User }> = ({ user }) => {
+  const initial = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+  if (user.photoURL) {
+    return <img src={user.photoURL} alt="User" className="w-9 h-9 rounded-full" />;
+  }
+  return (
+    <div className="w-9 h-9 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-lg">
+      {initial}
+    </div>
+  );
+};
 
 const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, properties, user, preselectedCategory }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(properties[0]?.id || '');
@@ -27,7 +39,6 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
       const permissionGranted = await requestNotificationPermission();
       if (permissionGranted) {
         setNotificationsEnabled(true);
-        // Set a default reminder time, e.g., next due date at 9 AM
         const defaultReminder = new Date(dueDate || new Date());
         defaultReminder.setHours(9, 0, 0, 0);
         setReminderDateTime(defaultReminder.toISOString().slice(0, 16));
@@ -65,119 +76,131 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
   };
   
   const PropertyCard: React.FC<{property: Property, isSelected: boolean, onClick: () => void}> = ({ property, isSelected, onClick }) => (
-    <button onClick={onClick} className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-[#CCD0CF] flex flex-col justify-end relative overflow-hidden transition-all duration-300 ring-2 ${isSelected ? 'ring-white' : 'ring-transparent'}`}>
-        <div className={`absolute inset-0 ${isSelected ? 'bg-[#06141B]' : 'bg-[#253745]'}`}></div>
-        <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full"></div>
-        <div className="absolute -bottom-12 -right-2 w-28 h-28 bg-white/5 rounded-full"></div>
+    <button onClick={onClick} className={`flex-shrink-0 w-48 h-28 rounded-2xl p-4 text-[#CCD0CF] flex flex-col justify-end relative overflow-hidden transition-all duration-300 ring-2 ${isSelected ? 'ring-white' : 'ring-transparent'}`}>
+        <div className={`absolute inset-0 bg-[#06141B]`}></div>
+        <div className="absolute -top-10 -right-10 w-24 h-24 bg-white/5 rounded-full"></div>
+        <div className="absolute -bottom-12 -right-2 w-24 h-24 bg-white/5 rounded-full"></div>
         <div className="relative z-10 text-left">
-            <div className="font-semibold text-lg">{property.name}</div>
-            <div className="text-xs text-[#9BA8AB]">{property.address}</div>
+            <div className="font-semibold">{property.name}</div>
+            <div className="text-xs text-[#9BA8AB] truncate">{property.address}</div>
         </div>
     </button>
   );
 
   return (
-    <div className="flex-1 flex flex-col bg-[#06141B] text-white min-h-0">
-      <header className="flex justify-between items-center p-6">
+    <div className="flex-1 flex flex-col bg-[#11212D] text-white">
+      <header className="flex justify-between items-center p-6 flex-shrink-0">
         <button onClick={() => onNavigate('home')} className="p-2 -ml-2">
           <ChevronLeftIcon className="w-6 h-6" />
         </button>
         <h1 className="text-lg font-bold">Add New Task</h1>
         <div className="flex items-center space-x-4">
           <BellIcon className="w-6 h-6" />
-          <img src={user.photoURL || `https://i.pravatar.cc/150?u=${user.uid}`} alt="User" className="w-9 h-9 rounded-full" />
+          <UserAvatar user={user} />
         </div>
       </header>
 
-      <div className="flex-1 bg-[#F0F2F5] text-[#253745] rounded-t-3xl p-6 flex flex-col justify-between overflow-y-auto">
-        <div className="space-y-6">
-          <section>
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="font-semibold">Select your property</h2>
-              <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium text-[#4A5C6A]">
-                <PlusIcon className="w-4 h-4" />
-                <span>Add</span>
-              </button>
-            </div>
-            <div className="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6">
-              {properties.length > 0 ? (
-                properties.map((prop) => 
-                  <PropertyCard 
-                    key={prop.id} 
-                    property={prop} 
-                    isSelected={selectedPropertyId === prop.id}
-                    onClick={() => setSelectedPropertyId(prop.id)}
-                  />
-                )
-              ) : (
-                <div className="w-full h-32 flex flex-col items-center justify-center bg-[#253745] rounded-2xl text-center text-white p-4">
-                    <p className="font-semibold">No properties found.</p>
-                    <p className="text-sm text-[#9BA8AB]">Please add a property first.</p>
-                </div>
-              )}
-            </div>
-          </section>
+      <div className="flex-1 flex flex-col bg-[#F0F2F5] text-[#253745] rounded-t-3xl overflow-hidden">
+        <div className="flex-1 p-6 overflow-y-auto">
+          <div className="space-y-6">
+            <section>
+              <div className="flex justify-between items-center mb-3">
+                <h2 className="font-semibold">Select your property</h2>
+                <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium text-[#4A5C6A]">
+                  <PlusIcon className="w-4 h-4" />
+                  <span>Add</span>
+                </button>
+              </div>
+              <div className="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6">
+                {properties.length > 0 ? (
+                  properties.map((prop) => 
+                    <PropertyCard 
+                      key={prop.id} 
+                      property={prop} 
+                      isSelected={selectedPropertyId === prop.id}
+                      onClick={() => setSelectedPropertyId(prop.id)}
+                    />
+                  )
+                ) : (
+                  <div className="w-full h-28 flex flex-col items-center justify-center bg-gray-200 rounded-2xl text-center text-gray-500 p-4">
+                      <p className="font-semibold">No properties found.</p>
+                      <p className="text-sm">Please add a property first.</p>
+                  </div>
+                )}
+              </div>
+            </section>
 
-          <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
-            <div>
-              <label htmlFor="taskName" className="text-sm font-medium text-gray-700">Task Name</label>
-              <input type="text" id="taskName" value={taskName} onChange={e => setTaskName(e.target.value)} placeholder="e.g. Change AC Filter" className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
               <div>
-                <label htmlFor="category" className="text-sm font-medium text-gray-700">Category</label>
-                <select id="category" value={category} onChange={e => setCategory(e.target.value as Category)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]">
-                  {Object.values(Category).map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                </select>
+                <label htmlFor="taskName" className="text-sm font-semibold text-gray-500 mb-1 block">Task Name</label>
+                <input type="text" id="taskName" value={taskName} onChange={e => setTaskName(e.target.value)} placeholder="e.g. Change AC Filter" className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B] focus:bg-white"/>
               </div>
-              <div>
-                <label htmlFor="lastCompletedDate" className="text-sm font-medium text-gray-700">Last Completed</label>
-                <input type="date" id="lastCompletedDate" value={lastCompletedDate} onChange={e => setLastCompletedDate(e.target.value)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="category" className="text-sm font-semibold text-gray-500 mb-1 block">Category</label>
+                  <select id="category" value={category} onChange={e => setCategory(e.target.value as Category)} className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B] focus:bg-white">
+                    {Object.values(Category).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="lastCompletedDate" className="text-sm font-semibold text-gray-500 mb-1 block">Last Completed</label>
+                  <div className="relative">
+                    <input type="date" id="lastCompletedDate" value={lastCompletedDate} onChange={e => setLastCompletedDate(e.target.value)} className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B] focus:bg-white pr-10"/>
+                    <CalendarIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"/>
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="dueDate" className="text-sm font-semibold text-gray-500 mb-1 block">Next Due Date</label>
+                    <div className="relative">
+                      <input type="date" id="dueDate" value={dueDate} onChange={e => setDueDate(e.target.value)} placeholder="dd/mm/yyyy" className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B] focus:bg-white pr-10"/>
+                      <CalendarIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"/>
+                    </div>
+                </div>
+                <div>
+                  <label htmlFor="lastBilledAmount" className="text-sm font-semibold text-gray-500 mb-1 block">Last Billed ($)</label>
+                  <input type="number" id="lastBilledAmount" value={lastBilledAmount} onChange={e => setLastBilledAmount(e.target.value)} placeholder="e.g. 75.50" className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B] focus:bg-white"/>
+                </div>
               </div>
-              <div>
-                <label htmlFor="dueDate" className="text-sm font-medium text-gray-700">Next Due Date</label>
-                <input type="date" id="dueDate" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pt-2">
+                    <label htmlFor="notifications" className="text-sm font-semibold text-gray-500">Set Reminder</label>
+                    <button
+                        role="switch"
+                        aria-checked={notificationsEnabled}
+                        onClick={handleToggleNotifications}
+                        className={`relative inline-flex items-center h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-[#253745] ${notificationsEnabled ? 'bg-[#253745]' : 'bg-gray-200'}`}
+                        id="notifications"
+                    >
+                        <span className={`inline-block w-6 h-6 transform bg-white rounded-full shadow-lg ring-0 transition duration-200 ease-in-out ${notificationsEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
+                    </button>
+                </div>
+                {notificationsEnabled && (
+                <div>
+                    <label htmlFor="reminderDateTime" className="text-sm font-semibold text-gray-500 mb-1 block">Reminder Date & Time</label>
+                    <div className="relative">
+                      <input 
+                        type="datetime-local" 
+                        id="reminderDateTime" 
+                        value={reminderDateTime} 
+                        onChange={e => setReminderDateTime(e.target.value)} 
+                        className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B] focus:bg-white pr-10"
+                      />
+                      <CalendarIcon className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none"/>
+                    </div>
+                </div>
+                )}
               </div>
-              <div>
-                <label htmlFor="lastBilledAmount" className="text-sm font-medium text-gray-700">Last Billed ($)</label>
-                <input type="number" id="lastBilledAmount" value={lastBilledAmount} onChange={e => setLastBilledAmount(e.target.value)} placeholder="e.g. 75.50" className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
-              </div>
-            </div>
-            <div className="border-t border-gray-200 pt-4 space-y-4">
-              <div className="flex items-center justify-between">
-                  <label htmlFor="notifications" className="text-sm font-medium text-gray-700">Set Reminder</label>
-                  <button
-                      role="switch"
-                      aria-checked={notificationsEnabled}
-                      onClick={handleToggleNotifications}
-                      className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#06141B] ${notificationsEnabled ? 'bg-[#253745]' : 'bg-gray-300'}`}
-                      id="notifications"
-                  >
-                      <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${notificationsEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
-                  </button>
-              </div>
-              {notificationsEnabled && (
-              <div>
-                  <label htmlFor="reminderDateTime" className="text-sm font-medium text-gray-700">Reminder Date & Time</label>
-                  <input 
-                  type="datetime-local" 
-                  id="reminderDateTime" 
-                  value={reminderDateTime} 
-                  onChange={e => setReminderDateTime(e.target.value)} 
-                  className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"
-                  />
-              </div>
-              )}
             </div>
           </div>
         </div>
-
-        <button 
-            onClick={handleSubmit} 
-            disabled={properties.length === 0}
-            className="w-full bg-[#06141B] text-white py-4 rounded-2xl font-bold text-lg mt-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
-          Add Task
-        </button>
+        <div className="p-6 bg-[#F0F2F5] border-t border-gray-200">
+          <button 
+              onClick={handleSubmit} 
+              disabled={properties.length === 0}
+              className="w-full bg-[#06141B] text-white py-4 rounded-2xl font-bold text-lg disabled:bg-gray-400 disabled:cursor-not-allowed transition-transform duration-200 active:scale-95">
+            Add Task
+          </button>
+        </div>
       </div>
     </div>
   );
