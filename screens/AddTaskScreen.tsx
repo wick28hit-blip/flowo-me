@@ -77,7 +77,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
   );
 
   return (
-    <div className="flex-1 flex flex-col bg-[#06141B] text-white">
+    <div className="flex-1 flex flex-col bg-[#06141B] text-white min-h-0">
       <header className="flex justify-between items-center p-6">
         <button onClick={() => onNavigate('home')} className="p-2 -ml-2">
           <ChevronLeftIcon className="w-6 h-6" />
