@@ -29,9 +29,8 @@ const QuickActionButton: React.FC<{
 
 const TaskGridCard: React.FC<{ 
   task: MaintenanceTask; 
-  propertyName: string; 
   onToggleTaskReminder: (taskId: string) => void;
-}> = ({ task, propertyName, onToggleTaskReminder }) => {
+}> = ({ task, onToggleTaskReminder }) => {
     const Icon = CategoryIcons[task.category];
     const daysRemaining = Math.ceil((new Date(task.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
     
@@ -45,15 +44,16 @@ const TaskGridCard: React.FC<{
         dueText = 'Due Today';
         dueTextColor = 'text-amber-400 font-semibold';
     } else if (daysRemaining === 1) {
-        dueText = 'Due Tomorrow';
+        dueText = 'Due in 1 day';
     } else {
         dueText = `Due in ${daysRemaining} days`;
     }
 
     return (
-        <div className="bg-[#06141B] rounded-2xl p-4 flex flex-col justify-between text-white shadow-lg space-y-3 min-h-[160px]">
+        <div className="bg-[#06141B] rounded-2xl p-4 flex flex-col justify-between text-white shadow-lg h-40">
+            {/* Top Row */}
             <div className="flex justify-between items-start">
-                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
                     <Icon className="w-5 h-5 text-white" />
                 </div>
                 <ToggleSwitch 
@@ -62,12 +62,10 @@ const TaskGridCard: React.FC<{
                   aria-label={`Enable reminder for ${task.name}`}
                 />
             </div>
-            <div className="flex-1">
+            {/* Bottom Row */}
+            <div>
                 <p className="font-bold text-white leading-tight">{task.name}</p>
-                <p className="text-sm text-[#9BA8AB]">{propertyName}</p>
-            </div>
-            <div className="text-right">
-              <p className={`font-semibold text-sm ${dueTextColor}`}>{dueText}</p>
+                <p className={`text-sm ${dueTextColor}`}>{dueText}</p>
             </div>
         </div>
     );
@@ -75,18 +73,6 @@ const TaskGridCard: React.FC<{
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, user, onSignOut, onToggleTaskReminder }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
-  
-  const PropertyCard: React.FC<{property: Property, isFirst: boolean}> = ({ property, isFirst }) => (
-    <div className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-[#CCD0CF] flex flex-col justify-end relative overflow-hidden`}>
-        <div className={`absolute inset-0 ${isFirst ? 'bg-[#06141B]' : 'bg-[#253745]'}`}></div>
-        <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full"></div>
-        <div className="absolute -bottom-12 -right-2 w-28 h-28 bg-white/5 rounded-full"></div>
-        <div className="relative z-10">
-            <div className="font-semibold text-lg">{property.name}</div>
-            <div className="text-xs text-[#9BA8AB]">{property.address}</div>
-        </div>
-    </div>
-  );
   
   const sortedTasks = [...tasks].sort((a, b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime());
   const userName = user.displayName?.split(' ')[0] || 'User';
@@ -130,7 +116,21 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         </div>
         <div className="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6">
            {properties.length > 0 ? (
-            properties.map((prop, index) => <PropertyCard key={prop.id} property={prop} isFirst={index === 0} />)
+            properties.map((prop, index) => (
+              <button 
+                  key={prop.id}
+                  onClick={() => onNavigate('details', { property: prop })}
+                  className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-[#CCD0CF] flex flex-col justify-end relative overflow-hidden text-left focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#F0F2F5] focus:ring-white`}
+              >
+                  <div className={`absolute inset-0 ${index === 0 ? 'bg-[#06141B]' : 'bg-[#253745]'}`}></div>
+                  <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full"></div>
+                  <div className="absolute -bottom-12 -right-2 w-28 h-28 bg-white/5 rounded-full"></div>
+                  <div className="relative z-10">
+                      <div className="font-semibold text-lg">{prop.name}</div>
+                      <div className="text-xs text-[#9BA8AB]">{prop.address}</div>
+                  </div>
+              </button>
+            ))
           ) : (
             <div className="w-full h-32 flex flex-col items-center justify-center bg-[#CCD0CF]/50 rounded-2xl text-center p-4">
                 <p className="font-semibold text-[#253745]">No properties yet.</p>
@@ -174,8 +174,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         {tasks.length > 0 ? (
           <div className="grid grid-cols-2 gap-4">
               {sortedTasks.map(task => {
-                const propertyName = properties.find(p => p.id === task.propertyId)?.name || 'N/A';
-                return <TaskGridCard key={task.id} task={task} propertyName={propertyName} onToggleTaskReminder={onToggleTaskReminder} />;
+                return <TaskGridCard key={task.id} task={task} onToggleTaskReminder={onToggleTaskReminder} />;
               })}
           </div>
         ) : (
