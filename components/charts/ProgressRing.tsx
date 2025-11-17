@@ -19,7 +19,7 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
     <div className="relative" style={{ width: size, height: size }}>
       <svg className="w-full h-full" viewBox={`0 0 ${size} ${size}`}>
         <circle
-          className="text-gray-300"
+          className="text-gray-200"
           stroke="currentColor"
           strokeWidth={strokeWidth}
           fill="transparent"
@@ -28,7 +28,7 @@ export const ProgressRing: React.FC<ProgressRingProps> = ({
           cy={size / 2}
         />
         <circle
-          className="text-[#253745]"
+          className="text-[#4A5C6A]"
           stroke="currentColor"
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
