@@ -16,7 +16,9 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
   const [selectedPropertyId, setSelectedPropertyId] = useState(properties[0]?.id || '');
   const [taskName, setTaskName] = useState('');
   const [category, setCategory] = useState<Category>(preselectedCategory || Category.FILTERS);
+  const [lastCompletedDate, setLastCompletedDate] = useState(new Date().toISOString().split('T')[0]);
   const [dueDate, setDueDate] = useState('');
+  const [lastBilledAmount, setLastBilledAmount] = useState('');
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [reminderDateTime, setReminderDateTime] = useState('');
 
@@ -39,8 +41,8 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
   };
 
   const handleSubmit = () => {
-    if (!taskName || !selectedPropertyId || !dueDate) {
-        alert("Please fill out all task details.");
+    if (!taskName || !selectedPropertyId || !dueDate || !lastCompletedDate) {
+        alert("Please fill out all required task details.");
         return;
     }
     if (notificationsEnabled && !reminderDateTime) {
@@ -51,12 +53,13 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
         id: `t-${Date.now()}`,
         name: taskName,
         category: category,
-        lastCompleted: new Date().toISOString().split('T')[0],
+        lastCompleted: lastCompletedDate,
         nextDue: dueDate,
         propertyId: selectedPropertyId,
         notificationsEnabled: notificationsEnabled,
         reminderDateTime: notificationsEnabled ? reminderDateTime : undefined,
         completionPercentage: 0,
+        lastBilledAmount: lastBilledAmount ? parseFloat(lastBilledAmount) : undefined,
     };
     onAddTask(newTask);
   };
@@ -128,8 +131,16 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
                 </select>
               </div>
               <div>
+                <label htmlFor="lastCompletedDate" className="text-sm font-medium text-gray-700">Last Completed</label>
+                <input type="date" id="lastCompletedDate" value={lastCompletedDate} onChange={e => setLastCompletedDate(e.target.value)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
+              </div>
+              <div>
                 <label htmlFor="dueDate" className="text-sm font-medium text-gray-700">Next Due Date</label>
                 <input type="date" id="dueDate" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
+              </div>
+              <div>
+                <label htmlFor="lastBilledAmount" className="text-sm font-medium text-gray-700">Last Billed ($)</label>
+                <input type="number" id="lastBilledAmount" value={lastBilledAmount} onChange={e => setLastBilledAmount(e.target.value)} placeholder="e.g. 75.50" className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
               </div>
             </div>
             <div className="border-t border-gray-200 pt-4 space-y-4">

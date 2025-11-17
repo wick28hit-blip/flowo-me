@@ -19,6 +19,7 @@ export interface MaintenanceTask {
   notificationsEnabled?: boolean;
   reminderEnabled?: boolean;
   completionPercentage: number;
+  lastBilledAmount?: number;
 }
 
 export interface Property {

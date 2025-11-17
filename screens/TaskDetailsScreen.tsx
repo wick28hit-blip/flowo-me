@@ -39,6 +39,16 @@ const TaskDetailsScreen: React.FC<TaskDetailsScreenProps> = ({
     onUpdateTask({ ...task, completionPercentage: newPercentage });
   };
 
+  const formatCurrency = (amount: number | undefined) => {
+    if (amount === undefined || amount === null) {
+      return 'N/A';
+    }
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  };
+
   return (
     <div className="flex-1 flex flex-col bg-[#F0F2F5]">
       <header className="flex items-center p-6 sticky top-0 bg-[#F0F2F5] z-10 border-b">
@@ -85,6 +95,14 @@ const TaskDetailsScreen: React.FC<TaskDetailsScreenProps> = ({
              <li className="py-3 flex justify-between items-center">
               <span className="text-gray-500">Next Due</span>
               <span className="font-semibold text-[#253745]">{new Date(task.nextDue).toLocaleDateString()}</span>
+            </li>
+            <li className="py-3 flex justify-between items-center">
+              <span className="text-gray-500">Last Completed</span>
+              <span className="font-semibold text-[#253745]">{new Date(task.lastCompleted).toLocaleDateString()}</span>
+            </li>
+             <li className="py-3 flex justify-between items-center">
+              <span className="text-gray-500">Last Billed Amount</span>
+              <span className="font-semibold text-[#253745]">{formatCurrency(task.lastBilledAmount)}</span>
             </li>
           </ul>
         </section>
