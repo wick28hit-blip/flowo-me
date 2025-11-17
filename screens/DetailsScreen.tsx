@@ -9,7 +9,10 @@ interface DetailsScreenProps {
   user: User;
 }
 
-const TaskListItem: React.FC<{task: MaintenanceTask}> = ({task}) => {
+const TaskListItem: React.FC<{
+    task: MaintenanceTask;
+    onClick: () => void;
+}> = ({task, onClick}) => {
     const Icon = CategoryIcons[task.category];
     const daysRemaining = Math.ceil((new Date(task.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
     
@@ -29,7 +32,7 @@ const TaskListItem: React.FC<{task: MaintenanceTask}> = ({task}) => {
     let dueLabel = daysRemaining < 0 ? 'Overdue' : 'Due';
 
     return (
-        <div className="bg-white rounded-xl p-3 flex items-center space-x-4 shadow-sm">
+        <button onClick={onClick} className="w-full bg-white rounded-xl p-3 flex items-center space-x-4 shadow-sm text-left focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#06141B]">
             <div className="w-12 h-12 bg-[#CCD0CF] rounded-lg flex items-center justify-center flex-shrink-0">
                 <Icon className="w-6 h-6 text-[#253745]" />
             </div>
@@ -41,7 +44,7 @@ const TaskListItem: React.FC<{task: MaintenanceTask}> = ({task}) => {
                 <p className={`font-semibold text-sm ${dueTextColor}`}>{dueText}</p>
                 <p className="text-xs text-gray-500">{dueLabel}</p>
             </div>
-        </div>
+        </button>
     );
 };
 
@@ -73,7 +76,9 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ onNavigate, property, tas
       <main className="flex-1 p-6 overflow-y-auto">
         {sortedTasks.length > 0 ? (
           <div className="space-y-3">
-            {sortedTasks.map(task => <TaskListItem key={task.id} task={task} />)}
+            {sortedTasks.map(task => 
+              <TaskListItem key={task.id} task={task} onClick={() => onNavigate('taskDetails', { taskId: task.id })} />
+            )}
           </div>
         ) : (
           <div className="text-center py-16 text-sm text-[#9BA8AB]">

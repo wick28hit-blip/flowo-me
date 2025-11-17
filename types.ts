@@ -1,4 +1,4 @@
-export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login' | 'addProperty' | 'profile';
+export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login' | 'addProperty' | 'profile' | 'taskDetails';
 
 export enum Category {
   FILTERS = 'Filters',
@@ -18,6 +18,7 @@ export interface MaintenanceTask {
   reminderDateTime?: string; // ISO datetime string
   notificationsEnabled?: boolean;
   reminderEnabled?: boolean;
+  completionPercentage: number;
 }
 
 export interface Property {
@@ -36,4 +37,5 @@ export interface User {
 export interface NavigationPayload {
   property?: Property;
   category?: Category;
+  taskId?: string;
 }

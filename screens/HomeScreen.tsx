@@ -173,9 +173,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         
         {tasks.length > 0 ? (
           <div className="grid grid-cols-2 gap-4">
-              {sortedTasks.map(task => {
-                return <TaskGridCard key={task.id} task={task} onToggleTaskReminder={onToggleTaskReminder} />;
-              })}
+              {sortedTasks.map(task => (
+                <button key={task.id} onClick={() => onNavigate('taskDetails', { taskId: task.id })} className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#F0F2F5] focus:ring-black rounded-2xl">
+                    <TaskGridCard task={task} onToggleTaskReminder={onToggleTaskReminder} />
+                </button>
+              ))}
           </div>
         ) : (
           <div className="text-center py-8 text-sm text-[#9BA8AB]">

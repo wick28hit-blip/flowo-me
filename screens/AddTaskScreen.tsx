@@ -56,6 +56,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
         propertyId: selectedPropertyId,
         notificationsEnabled: notificationsEnabled,
         reminderDateTime: notificationsEnabled ? reminderDateTime : undefined,
+        completionPercentage: 0,
     };
     onAddTask(newTask);
   };

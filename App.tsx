@@ -9,6 +9,7 @@ import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import AddPropertyScreen from './screens/AddPropertyScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import TaskDetailsScreen from './screens/TaskDetailsScreen';
 
 
 import type { Screen, Property, MaintenanceTask, User, Category, NavigationPayload } from './types';
@@ -17,8 +18,10 @@ import { sendReminderEmail } from './utils/email';
 
 const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('home');
+  const [previousScreen, setPreviousScreen] = useState<Screen>('home');
   const [properties, setProperties] = useState<Property[]>([]);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [tasks, setTasks] = useState<MaintenanceTask[]>([]);
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [isSplashActive, setIsSplashActive] = useState(true);
@@ -49,9 +52,16 @@ const App: React.FC = () => {
   }, []);
 
   const handleNavigate = useCallback((newScreen: Screen, payload?: NavigationPayload) => {
+    if (newScreen !== screen) {
+      setPreviousScreen(screen);
+    }
     setScreen(newScreen);
+
     if (payload?.property) {
       setSelectedPropertyId(payload.property.id);
+    }
+     if (payload?.taskId) {
+      setSelectedTaskId(payload.taskId);
     }
     
     if (newScreen === 'add' && payload?.category) {
@@ -59,7 +69,7 @@ const App: React.FC = () => {
     } else {
         setPreselectedCategory(null);
     }
-  }, []);
+  }, [screen]);
   
   const handleAddTask = (task: MaintenanceTask) => {
     if (task.notificationsEnabled && task.reminderDateTime) {
@@ -67,6 +77,10 @@ const App: React.FC = () => {
     }
     setTasks(prevTasks => [...prevTasks, task]);
     setScreen('home');
+  };
+
+  const handleUpdateTask = (updatedTask: MaintenanceTask) => {
+    setTasks(prevTasks => prevTasks.map(task => task.id === updatedTask.id ? updatedTask : task));
   };
   
   const handleAddProperty = (property: Property) => {
@@ -113,6 +127,8 @@ const App: React.FC = () => {
 
   const renderScreen = (currentUser: User) => {
     const selectedProperty = properties.find(p => p.id === selectedPropertyId) || properties[0] || null;
+    const selectedTask = tasks.find(t => t.id === selectedTaskId) || null;
+    const taskProperty = selectedTask ? properties.find(p => p.id === selectedTask.propertyId) : null;
 
     switch (screen) {
       case 'home':
@@ -125,6 +141,17 @@ const App: React.FC = () => {
         return <AddPropertyScreen onNavigate={handleNavigate} onAddProperty={handleAddProperty} user={currentUser} />;
       case 'profile':
         return <ProfileScreen onNavigate={handleNavigate} user={currentUser} onUpdateUser={handleUpdateUser} />;
+      case 'taskDetails':
+        if (!selectedTask || !taskProperty) {
+            return <DetailsScreen onNavigate={handleNavigate} property={selectedProperty} tasks={tasks.filter(t => t.propertyId === selectedProperty?.id)} user={currentUser} />;
+        }
+        return <TaskDetailsScreen 
+            onNavigate={handleNavigate} 
+            task={selectedTask}
+            property={taskProperty}
+            previousScreen={previousScreen}
+            onUpdateTask={handleUpdateTask}
+        />;
       default:
         return <HomeScreen onNavigate={handleNavigate} properties={properties} tasks={tasks} user={currentUser} onSignOut={handleSignOut} onToggleTaskReminder={handleToggleTaskReminder} />;
     }
