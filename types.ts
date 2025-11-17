@@ -32,3 +32,8 @@ export interface User {
   email: string | null;
   photoURL: string | null;
 }
+
+export interface NavigationPayload {
+  property?: Property;
+  category?: Category;
+}

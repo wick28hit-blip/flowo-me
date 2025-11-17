@@ -9,7 +9,7 @@ import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import AddPropertyScreen from './screens/AddPropertyScreen';
 
-import type { Screen, Property, MaintenanceTask, User } from './types';
+import type { Screen, Property, MaintenanceTask, User, Category, NavigationPayload } from './types';
 import { mockProperties, mockTasks } from './constants';
 import { scheduleNotification } from './utils/notifications';
 import { sendReminderEmail } from './utils/email';
@@ -21,6 +21,7 @@ const App: React.FC = () => {
   const [tasks, setTasks] = useState<MaintenanceTask[]>(mockTasks);
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [isSplashActive, setIsSplashActive] = useState(true);
+  const [preselectedCategory, setPreselectedCategory] = useState<Category | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
@@ -46,10 +47,16 @@ const App: React.FC = () => {
     };
   }, []);
 
-  const handleNavigate = useCallback((newScreen: Screen, property?: Property) => {
+  const handleNavigate = useCallback((newScreen: Screen, payload?: NavigationPayload) => {
     setScreen(newScreen);
-    if (property) {
-      setSelectedPropertyId(property.id);
+    if (payload?.property) {
+      setSelectedPropertyId(payload.property.id);
+    }
+    
+    if (newScreen === 'add' && payload?.category) {
+        setPreselectedCategory(payload.category);
+    } else {
+        setPreselectedCategory(null);
     }
   }, []);
   
@@ -105,7 +112,7 @@ const App: React.FC = () => {
       case 'details':
         return <DetailsScreen onNavigate={handleNavigate} property={selectedProperty} tasks={tasks.filter(t => t.propertyId === selectedProperty?.id)} user={currentUser} />;
       case 'add':
-        return <AddTaskScreen onNavigate={handleNavigate} onAddTask={handleAddTask} properties={properties} user={currentUser} />;
+        return <AddTaskScreen onNavigate={handleNavigate} onAddTask={handleAddTask} properties={properties} user={currentUser} preselectedCategory={preselectedCategory} />;
       case 'addProperty':
         return <AddPropertyScreen onNavigate={handleNavigate} onAddProperty={handleAddProperty} user={currentUser} />;
       default:

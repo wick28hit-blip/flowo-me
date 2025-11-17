@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import type { Screen, Property, User } from '../types';
+import type { Screen, Property, User, NavigationPayload } from '../types';
 import { ChevronLeftIcon, BellIcon } from '../components/icons';
 
 interface AddPropertyScreenProps {
-  onNavigate: (screen: Screen) => void;
+  onNavigate: (screen: Screen, payload?: NavigationPayload) => void;
   onAddProperty: (property: Property) => void;
   user: User;
 }

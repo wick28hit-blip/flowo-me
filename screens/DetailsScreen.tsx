@@ -1,11 +1,11 @@
 import React from 'react';
-import type { Screen, Property, MaintenanceTask, User } from '../types';
+import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from '../types';
 import { Category } from '../types';
 import { ChevronLeftIcon, BellIcon, CategoryIcons } from '../components/icons';
 import { MaintenanceBarChart } from '../components/charts/MaintenanceCharts';
 
 interface DetailsScreenProps {
-  onNavigate: (screen: Screen, property?: Property) => void;
+  onNavigate: (screen: Screen, payload?: NavigationPayload) => void;
   property: Property | null;
   tasks: MaintenanceTask[];
   user: User;

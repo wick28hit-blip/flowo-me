@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import type { Screen, Property, MaintenanceTask, User } from '../types';
+import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from '../types';
+import { Category } from '../types';
 import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons, SignOutIcon } from '../components/icons';
 import { MaintenancePieChart } from '../components/charts/MaintenanceCharts';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 
 interface HomeScreenProps {
-  onNavigate: (screen: Screen, property?: Property) => void;
+  onNavigate: (screen: Screen, payload?: NavigationPayload) => void;
   properties: Property[];
   tasks: MaintenanceTask[];
   user: User;
@@ -142,14 +143,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
             <QuickActionButton 
               icon={<CategoryIcons.Plumbing className="w-6 h-6" />} 
               label="Plumbing"
+              onClick={() => onNavigate('add', { category: Category.PLUMBING })}
             />
             <QuickActionButton 
               icon={<CategoryIcons.Electrical className="w-6 h-6" />} 
               label="Electrical"
+              onClick={() => onNavigate('add', { category: Category.ELECTRICAL })}
             />
             <QuickActionButton 
               icon={<CategoryIcons.HVAC className="w-6 h-6" />} 
-              label="HVAC" 
+              label="HVAC"
+              onClick={() => onNavigate('add', { category: Category.HVAC })}
             />
         </div>
       </section>
@@ -162,7 +166,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
               <p className="text-xs text-gray-500">Overview of all tasks</p>
             </div>
         </div>
-        <button onClick={() => onNavigate('details', properties[0])}>
+        <button onClick={() => onNavigate('details', { property: properties[0] })}>
             <BarChartIcon className="w-8 h-8"/>
         </button>
       </GlassCard>

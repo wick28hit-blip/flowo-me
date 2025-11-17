@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import type { Screen, Property, MaintenanceTask, User } from '../types';
+import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from '../types';
 import { Category } from '../types';
 import { ChevronLeftIcon, BellIcon, PlusIcon } from '../components/icons';
 import { requestNotificationPermission } from '../utils/notifications';
 
 interface AddTaskScreenProps {
-  onNavigate: (screen: Screen, property?: Property) => void;
+  onNavigate: (screen: Screen, payload?: NavigationPayload) => void;
   onAddTask: (task: MaintenanceTask) => void;
   properties: Property[];
   user: User;
+  preselectedCategory?: Category | null;
 }
 
-const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, properties, user }) => {
+const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, properties, user, preselectedCategory }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(properties[0]?.id || '');
   const [taskName, setTaskName] = useState('');
-  const [category, setCategory] = useState<Category>(Category.FILTERS);
+  const [category, setCategory] = useState<Category>(preselectedCategory || Category.FILTERS);
   const [dueDate, setDueDate] = useState('');
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [reminderDateTime, setReminderDateTime] = useState('');
