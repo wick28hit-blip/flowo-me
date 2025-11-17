@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from '../types';
 import { Category } from '../types';
 import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons, SignOutIcon, UserIcon } from '../components/icons';
-import { MaintenancePieChart } from '../components/charts/MaintenanceCharts';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 
 interface HomeScreenProps {
@@ -28,27 +27,42 @@ const QuickActionButton: React.FC<{
   </button>
 );
 
-const TaskItem: React.FC<{ task: MaintenanceTask; propertyName: string }> = ({ task, propertyName }) => {
+const TaskCard: React.FC<{ task: MaintenanceTask; propertyName: string }> = ({ task, propertyName }) => {
     const Icon = CategoryIcons[task.category];
     const daysRemaining = Math.ceil((new Date(task.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+    
+    let dueText: string;
+    let dueTextColor = 'text-gray-600';
+
+    if (daysRemaining < 0) {
+        dueText = 'Overdue';
+        dueTextColor = 'text-red-500 font-semibold';
+    } else if (daysRemaining === 0) {
+        dueText = 'Today';
+        dueTextColor = 'text-amber-500 font-semibold';
+    } else if (daysRemaining === 1) {
+        dueText = 'Tomorrow';
+    } else {
+        dueText = `${daysRemaining} days`;
+    }
 
     return (
-        <div className="flex items-center justify-between py-3">
+        <div className="bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm border border-gray-200/50">
             <div className="flex items-center space-x-4">
-                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-black" />
+                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                    <Icon className="w-6 h-6 text-black" />
                 </div>
                 <div>
-                    <p className="font-semibold">{task.name}</p>
-                    <p className="text-xs text-gray-500">{propertyName}</p>
+                    <p className="font-bold text-gray-800">{task.name}</p>
+                    <p className="text-sm text-gray-500">{propertyName}</p>
                 </div>
             </div>
-            <div className="text-right">
-              <p className="font-semibold text-sm">{daysRemaining > 1 ? `${daysRemaining} days` : daysRemaining === 1 ? 'Tomorrow' : 'Today'}</p>
+            <div className="text-right flex-shrink-0 ml-2">
+              <p className={`font-semibold text-md ${dueTextColor}`}>{dueText}</p>
               <p className="text-xs text-gray-500">Due</p>
             </div>
         </div>
-     );
+    );
 };
 
 
@@ -67,14 +81,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
     </div>
   );
   
-  const GlassCard: React.FC<{children: React.ReactNode; className?: string}> = ({ children, className }) => (
-    <div className={`bg-white/50 backdrop-blur-lg border border-white/20 rounded-2xl p-4 ${className}`}>
-      {children}
-    </div>
-  );
-  
-  const nextTask = [...tasks].sort((a,b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime())[0];
-  const recentTasks = [...tasks].sort((a, b) => parseInt(b.id.split('-')[1]) - parseInt(a.id.split('-')[1])).slice(0, 3);
+  const sortedTasks = [...tasks].sort((a, b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime());
+  const nextTask = sortedTasks[0];
   const userName = user.displayName?.split(' ')[0] || 'User';
   
   const NextDueTaskCard = () => {
@@ -190,16 +198,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         </div>
       </section>
       
-       <section>
-        <h2 className="font-semibold mb-2">Recent Tasks</h2>
-        <div className="divide-y divide-gray-200 bg-white/80 rounded-2xl p-4">
-            {recentTasks.length > 0 ? (
-              recentTasks.map(task => {
+      <section>
+        <h2 className="font-semibold">Task</h2>
+        <hr className="border-t border-black my-3" />
+        <div className="space-y-3">
+            {sortedTasks.length > 0 ? (
+              sortedTasks.map(task => {
                 const propertyName = properties.find(p => p.id === task.propertyId)?.name || 'N/A';
-                return <TaskItem key={task.id} task={task} propertyName={propertyName} />;
+                return <TaskCard key={task.id} task={task} propertyName={propertyName} />;
               })
             ) : (
-              <p className="text-sm text-gray-500 text-center py-4">No recent tasks. Add one using a quick action!</p>
+              <div className="text-center py-8 text-sm text-gray-500">
+                <p>No tasks found.</p>
+                <p className="text-xs text-gray-400 mt-1">Add one using the "Quick Actions" above.</p>
+              </div>
             )}
         </div>
       </section>
