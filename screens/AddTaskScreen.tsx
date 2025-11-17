@@ -3,6 +3,7 @@ import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from 
 import { Category } from '../types';
 import { ChevronLeftIcon, BellIcon, PlusIcon, CalendarIcon } from '../components/icons';
 import { requestNotificationPermission } from '../utils/notifications';
+import { ToggleSwitch } from '../components/ToggleSwitch';
 
 interface AddTaskScreenProps {
   onNavigate: (screen: Screen, payload?: NavigationPayload) => void;
@@ -100,7 +101,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
         </div>
       </header>
 
-      <div className="flex-1 flex flex-col bg-[#F0F2F5] text-[#253745] rounded-t-3xl overflow-hidden">
+      <div className="flex-1 flex flex-col bg-[#F0F2F5] text-[#253745] rounded-t-3xl overflow-hidden min-h-0">
         <div className="flex-1 p-6 overflow-y-auto">
           <div className="space-y-6">
             <section>
@@ -164,15 +165,11 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
               <div className="space-y-4">
                 <div className="flex items-center justify-between pt-2">
                     <label htmlFor="notifications" className="text-sm font-semibold text-gray-500">Set Reminder</label>
-                    <button
-                        role="switch"
-                        aria-checked={notificationsEnabled}
-                        onClick={handleToggleNotifications}
-                        className={`relative inline-flex items-center h-7 w-12 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-[#253745] ${notificationsEnabled ? 'bg-[#253745]' : 'bg-gray-200'}`}
-                        id="notifications"
-                    >
-                        <span className={`inline-block w-6 h-6 transform bg-white rounded-full shadow-lg ring-0 transition duration-200 ease-in-out ${notificationsEnabled ? 'translate-x-5' : 'translate-x-0'}`} />
-                    </button>
+                    <ToggleSwitch 
+                        isOn={notificationsEnabled} 
+                        onToggle={handleToggleNotifications}
+                        aria-label="Set Reminder"
+                    />
                 </div>
                 {notificationsEnabled && (
                 <div>
@@ -196,7 +193,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
         <div className="p-6 bg-[#F0F2F5] border-t border-gray-200">
           <button 
               onClick={handleSubmit} 
-              disabled={properties.length === 0}
+              disabled={properties.length === 0 || !selectedPropertyId}
               className="w-full bg-[#06141B] text-white py-4 rounded-2xl font-bold text-lg disabled:bg-gray-400 disabled:cursor-not-allowed transition-transform duration-200 active:scale-95">
             Add Task
           </button>
