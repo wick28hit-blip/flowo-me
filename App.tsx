@@ -141,8 +141,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans flex items-center justify-center p-2">
-      <div className="w-full max-w-sm h-[800px] max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="min-h-screen bg-[#11212D] font-sans flex items-center justify-center p-2">
+      <div className="w-full max-w-sm h-[800px] max-h-[90vh] bg-[#F0F2F5] rounded-3xl shadow-2xl overflow-hidden flex flex-col">
         {renderContent()}
       </div>
     </div>

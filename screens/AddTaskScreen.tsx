@@ -61,19 +61,19 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
   };
   
   const PropertyCard: React.FC<{property: Property, isSelected: boolean, onClick: () => void}> = ({ property, isSelected, onClick }) => (
-    <button onClick={onClick} className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-white flex flex-col justify-end relative overflow-hidden transition-all duration-300 ring-2 ${isSelected ? 'ring-white' : 'ring-transparent'}`}>
-        <div className={`absolute inset-0 ${isSelected ? 'bg-black' : 'bg-zinc-800'}`}></div>
+    <button onClick={onClick} className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-[#CCD0CF] flex flex-col justify-end relative overflow-hidden transition-all duration-300 ring-2 ${isSelected ? 'ring-white' : 'ring-transparent'}`}>
+        <div className={`absolute inset-0 ${isSelected ? 'bg-[#06141B]' : 'bg-[#253745]'}`}></div>
         <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full"></div>
         <div className="absolute -bottom-12 -right-2 w-28 h-28 bg-white/5 rounded-full"></div>
         <div className="relative z-10 text-left">
             <div className="font-semibold text-lg">{property.name}</div>
-            <div className="text-xs text-gray-300">{property.address}</div>
+            <div className="text-xs text-[#9BA8AB]">{property.address}</div>
         </div>
     </button>
   );
 
   return (
-    <div className="flex-1 flex flex-col bg-black text-white">
+    <div className="flex-1 flex flex-col bg-[#06141B] text-white">
       <header className="flex justify-between items-center p-6">
         <button onClick={() => onNavigate('home')} className="p-2 -ml-2">
           <ChevronLeftIcon className="w-6 h-6" />
@@ -85,12 +85,12 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
         </div>
       </header>
 
-      <div className="flex-1 bg-gray-100 text-black rounded-t-3xl p-6 flex flex-col justify-between overflow-y-auto">
+      <div className="flex-1 bg-[#F0F2F5] text-[#253745] rounded-t-3xl p-6 flex flex-col justify-between overflow-y-auto">
         <div className="space-y-6">
           <section>
             <div className="flex justify-between items-center mb-3">
               <h2 className="font-semibold">Select your property</h2>
-              <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium">
+              <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium text-[#4A5C6A]">
                 <PlusIcon className="w-4 h-4" />
                 <span>Add</span>
               </button>
@@ -106,9 +106,9 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
                   />
                 )
               ) : (
-                <div className="w-full h-32 flex flex-col items-center justify-center bg-zinc-700 rounded-2xl text-center text-white p-4">
+                <div className="w-full h-32 flex flex-col items-center justify-center bg-[#253745] rounded-2xl text-center text-white p-4">
                     <p className="font-semibold">No properties found.</p>
-                    <p className="text-sm text-gray-300">Please add a property first.</p>
+                    <p className="text-sm text-[#9BA8AB]">Please add a property first.</p>
                 </div>
               )}
             </div>
@@ -117,18 +117,18 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
           <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
             <div>
               <label htmlFor="taskName" className="text-sm font-medium text-gray-700">Task Name</label>
-              <input type="text" id="taskName" value={taskName} onChange={e => setTaskName(e.target.value)} placeholder="e.g. Change AC Filter" className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-black focus:border-black"/>
+              <input type="text" id="taskName" value={taskName} onChange={e => setTaskName(e.target.value)} placeholder="e.g. Change AC Filter" className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="category" className="text-sm font-medium text-gray-700">Category</label>
-                <select id="category" value={category} onChange={e => setCategory(e.target.value as Category)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-black focus:border-black">
+                <select id="category" value={category} onChange={e => setCategory(e.target.value as Category)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]">
                   {Object.values(Category).map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
               </div>
               <div>
                 <label htmlFor="dueDate" className="text-sm font-medium text-gray-700">Next Due Date</label>
-                <input type="date" id="dueDate" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-black focus:border-black"/>
+                <input type="date" id="dueDate" value={dueDate} onChange={e => setDueDate(e.target.value)} className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"/>
               </div>
             </div>
             <div className="border-t border-gray-200 pt-4 space-y-4">
@@ -138,7 +138,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
                       role="switch"
                       aria-checked={notificationsEnabled}
                       onClick={handleToggleNotifications}
-                      className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black ${notificationsEnabled ? 'bg-black' : 'bg-gray-300'}`}
+                      className={`relative inline-flex items-center h-6 rounded-full w-11 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#06141B] ${notificationsEnabled ? 'bg-[#253745]' : 'bg-gray-300'}`}
                       id="notifications"
                   >
                       <span className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${notificationsEnabled ? 'translate-x-6' : 'translate-x-1'}`} />
@@ -152,7 +152,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
                   id="reminderDateTime" 
                   value={reminderDateTime} 
                   onChange={e => setReminderDateTime(e.target.value)} 
-                  className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-black focus:border-black"
+                  className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"
                   />
               </div>
               )}
@@ -163,7 +163,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
         <button 
             onClick={handleSubmit} 
             disabled={properties.length === 0}
-            className="w-full bg-black text-white py-4 rounded-2xl font-bold text-lg mt-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
+            className="w-full bg-[#06141B] text-white py-4 rounded-2xl font-bold text-lg mt-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
           Add Task
         </button>
       </div>

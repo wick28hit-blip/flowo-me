@@ -13,8 +13,8 @@ export const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ isOn, onToggle, 'ari
       role="switch"
       aria-checked={isOn}
       aria-label={ariaLabel}
-      className={`relative inline-flex items-center h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white ${
-        isOn ? 'bg-blue-500' : 'bg-gray-400'
+      className={`relative inline-flex items-center h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#06141B] focus:ring-white ${
+        isOn ? 'bg-[#4A5C6A]' : 'bg-[#9BA8AB]'
       }`}
     >
       <span

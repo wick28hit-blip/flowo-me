@@ -26,7 +26,7 @@ const AddPropertyScreen: React.FC<AddPropertyScreenProps> = ({ onNavigate, onAdd
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-black text-white">
+    <div className="flex-1 flex flex-col bg-[#06141B] text-white">
       <header className="flex justify-between items-center p-6">
         <button onClick={() => onNavigate('home')} className="p-2 -ml-2">
           <ChevronLeftIcon className="w-6 h-6" />
@@ -38,7 +38,7 @@ const AddPropertyScreen: React.FC<AddPropertyScreenProps> = ({ onNavigate, onAdd
         </div>
       </header>
 
-      <div className="flex-1 bg-gray-100 text-black rounded-t-3xl p-6 flex flex-col justify-between overflow-y-auto">
+      <div className="flex-1 bg-[#F0F2F5] text-[#253745] rounded-t-3xl p-6 flex flex-col justify-between overflow-y-auto">
         <div className="space-y-6">
           <div className="bg-white rounded-2xl p-4 space-y-4 shadow-sm">
             <div>
@@ -49,7 +49,7 @@ const AddPropertyScreen: React.FC<AddPropertyScreenProps> = ({ onNavigate, onAdd
                 value={propertyName} 
                 onChange={e => setPropertyName(e.target.value)} 
                 placeholder="e.g. Main Residence" 
-                className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-black focus:border-black"
+                className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"
               />
             </div>
             <div>
@@ -60,13 +60,13 @@ const AddPropertyScreen: React.FC<AddPropertyScreenProps> = ({ onNavigate, onAdd
                 value={propertyAddress} 
                 onChange={e => setPropertyAddress(e.target.value)} 
                 placeholder="e.g. 123 Maple St" 
-                className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-black focus:border-black"
+                className="w-full mt-1 p-2 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B]"
               />
             </div>
           </div>
         </div>
 
-        <button onClick={handleSubmit} className="w-full bg-black text-white py-4 rounded-2xl font-bold text-lg mt-6">
+        <button onClick={handleSubmit} className="w-full bg-[#06141B] text-white py-4 rounded-2xl font-bold text-lg mt-6">
           Save Property
         </button>
       </div>

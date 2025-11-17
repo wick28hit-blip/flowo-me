@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from '../types';
 import { Category } from '../types';
-import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons, SignOutIcon, UserIcon } from '../components/icons';
+import { BellIcon, PlusIcon, CategoryIcons, SignOutIcon, UserIcon } from '../components/icons';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 
 interface HomeScreenProps {
@@ -20,19 +20,19 @@ const QuickActionButton: React.FC<{
   isPrimary?: boolean;
 }> = ({ icon, label, onClick, isPrimary = false }) => (
   <button onClick={onClick} className="flex flex-col items-center space-y-2 group" aria-label={label}>
-    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${isPrimary ? 'bg-black text-white' : 'bg-gray-200/80 text-black'}`}>
+    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${isPrimary ? 'bg-[#253745] text-white' : 'bg-[#CCD0CF] text-black'}`}>
       {icon}
     </div>
-    <span className="text-xs font-medium text-gray-700">{label}</span>
+    <span className="text-xs font-medium text-[#4A5C6A]">{label}</span>
   </button>
 );
 
-const TaskCard: React.FC<{ task: MaintenanceTask; propertyName: string }> = ({ task, propertyName }) => {
+const GridTaskCard: React.FC<{ task: MaintenanceTask; propertyName: string }> = ({ task, propertyName }) => {
     const Icon = CategoryIcons[task.category];
     const daysRemaining = Math.ceil((new Date(task.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
     
     let dueText: string;
-    let dueTextColor = 'text-gray-600';
+    let dueTextColor = 'text-[#4A5C6A]';
 
     if (daysRemaining < 0) {
         dueText = 'Overdue';
@@ -47,19 +47,19 @@ const TaskCard: React.FC<{ task: MaintenanceTask; propertyName: string }> = ({ t
     }
 
     return (
-        <div className="bg-white rounded-2xl p-4 flex items-center justify-between shadow-sm border border-gray-200/50">
-            <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-black" />
+        <div className="bg-white rounded-2xl p-3 flex flex-col justify-between shadow-sm border border-[#CCD0CF]/50 space-y-2">
+            <div className="flex items-start space-x-3">
+                <div className="w-10 h-10 bg-[#F0F2F5] rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-5 h-5 text-[#06141B]" />
                 </div>
                 <div>
-                    <p className="font-bold text-gray-800">{task.name}</p>
-                    <p className="text-sm text-gray-500">{propertyName}</p>
+                    <p className="font-bold text-[#253745] leading-tight">{task.name}</p>
+                    <p className="text-xs text-[#9BA8AB]">{propertyName}</p>
                 </div>
             </div>
-            <div className="text-right flex-shrink-0 ml-2">
-              <p className={`font-semibold text-md ${dueTextColor}`}>{dueText}</p>
-              <p className="text-xs text-gray-500">Due</p>
+            <div className="text-right">
+              <p className={`font-semibold text-sm ${dueTextColor}`}>{dueText}</p>
+              <p className="text-xs text-[#9BA8AB]">Due</p>
             </div>
         </div>
     );
@@ -70,36 +70,32 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
   const [showUserMenu, setShowUserMenu] = useState(false);
   
   const PropertyCard: React.FC<{property: Property, isFirst: boolean}> = ({ property, isFirst }) => (
-    <div className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-white flex flex-col justify-end relative overflow-hidden`}>
-        <div className={`absolute inset-0 ${isFirst ? 'bg-black' : 'bg-zinc-800'}`}></div>
+    <div className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-[#CCD0CF] flex flex-col justify-end relative overflow-hidden`}>
+        <div className={`absolute inset-0 ${isFirst ? 'bg-[#06141B]' : 'bg-[#253745]'}`}></div>
         <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full"></div>
         <div className="absolute -bottom-12 -right-2 w-28 h-28 bg-white/5 rounded-full"></div>
         <div className="relative z-10">
             <div className="font-semibold text-lg">{property.name}</div>
-            <div className="text-xs text-gray-300">{property.address}</div>
+            <div className="text-xs text-[#9BA8AB]">{property.address}</div>
         </div>
     </div>
   );
   
   const sortedTasks = [...tasks].sort((a, b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime());
   const nextTask = sortedTasks[0];
+  const otherTasks = sortedTasks.slice(1);
   const userName = user.displayName?.split(' ')[0] || 'User';
   
   const NextDueTaskCard = () => {
     if (!nextTask) {
-        return (
-            <div className="bg-gray-800 rounded-2xl p-5 flex flex-col justify-center items-center h-40 text-white">
-                <p className="font-semibold">No upcoming tasks!</p>
-                <p className="text-gray-400 text-sm">Add a task to get started.</p>
-            </div>
-        )
+        return null;
     }
     
     const daysRemaining = Math.ceil((new Date(nextTask.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
     const Icon = CategoryIcons[nextTask.category];
 
     return (
-        <div className="bg-black rounded-2xl p-5 flex flex-col justify-between h-40 text-white shadow-lg">
+        <div className="bg-[#06141B] rounded-2xl p-5 flex flex-col justify-between h-40 text-white shadow-lg">
             <div className="flex justify-between items-start">
                 <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
                     <Icon className="w-6 h-6 text-white" />
@@ -112,7 +108,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
             </div>
             <div>
                 <h3 className="font-bold text-lg">{nextTask.name}</h3>
-                <p className="text-gray-400 text-sm">
+                <p className="text-[#9BA8AB] text-sm">
                     {daysRemaining > 1 ? `Due in ${daysRemaining} days` : daysRemaining === 1 ? 'Due tomorrow' : 'Due today'}
                 </p>
             </div>
@@ -121,14 +117,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
   };
 
   return (
-    <div className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto">
+    <div className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto text-[#253745]">
       <header className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold">Hello {userName},</h1>
-          <p className="text-gray-500">Welcome back!</p>
+          <p className="text-[#9BA8AB]">Welcome back!</p>
         </div>
         <div className="flex items-center space-x-4">
-          <BellIcon className="w-6 h-6 text-gray-700" />
+          <BellIcon className="w-6 h-6 text-[#4A5C6A]" />
           <div className="relative">
             <button onClick={() => setShowUserMenu(!showUserMenu)}>
                 <img src={user.photoURL || `https://i.pravatar.cc/150?u=${user.uid}`} alt="User" className="w-9 h-9 rounded-full" />
@@ -152,7 +148,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
       <section>
         <div className="flex justify-between items-center mb-3">
           <h2 className="font-semibold">Your Properties</h2>
-          <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium">
+          <button onClick={() => onNavigate('addProperty')} className="flex items-center space-x-1 text-sm font-medium text-[#4A5C6A]">
             <PlusIcon className="w-4 h-4" />
             <span>Add</span>
           </button>
@@ -161,15 +157,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
            {properties.length > 0 ? (
             properties.map((prop, index) => <PropertyCard key={prop.id} property={prop} isFirst={index === 0} />)
           ) : (
-            <div className="w-full h-32 flex flex-col items-center justify-center bg-gray-100 rounded-2xl text-center p-4">
-                <p className="font-semibold text-gray-700">No properties yet.</p>
-                <p className="text-sm text-gray-500">Click "Add" to get started.</p>
+            <div className="w-full h-32 flex flex-col items-center justify-center bg-[#CCD0CF]/50 rounded-2xl text-center p-4">
+                <p className="font-semibold text-[#253745]">No properties yet.</p>
+                <p className="text-sm text-[#4A5C6A]">Click "Add" to get started.</p>
             </div>
           )}
         </div>
       </section>
-
-      <NextDueTaskCard />
 
       <section>
         <h2 className="font-semibold mb-3">Quick Actions</h2>
@@ -198,22 +192,31 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         </div>
       </section>
       
-      <section>
+      <section className="space-y-4">
         <h2 className="font-semibold">Task</h2>
-        <hr className="border-t border-black my-3" />
-        <div className="space-y-3">
-            {sortedTasks.length > 0 ? (
-              sortedTasks.map(task => {
+        <hr className="border-t border-black my-0" />
+        
+        <NextDueTaskCard />
+
+        {tasks.length > 0 ? (
+          <div className="grid grid-cols-2 gap-4">
+              {otherTasks.map(task => {
                 const propertyName = properties.find(p => p.id === task.propertyId)?.name || 'N/A';
-                return <TaskCard key={task.id} task={task} propertyName={propertyName} />;
-              })
-            ) : (
-              <div className="text-center py-8 text-sm text-gray-500">
-                <p>No tasks found.</p>
-                <p className="text-xs text-gray-400 mt-1">Add one using the "Quick Actions" above.</p>
-              </div>
-            )}
-        </div>
+                return <GridTaskCard key={task.id} task={task} propertyName={propertyName} />;
+              })}
+          </div>
+        ) : (
+          <div className="text-center py-8 text-sm text-[#9BA8AB]">
+            <p>No tasks found.</p>
+            <p className="text-xs text-[#CCD0CF] mt-1">Add one using the "Quick Actions" above.</p>
+          </div>
+        )}
+
+        {tasks.length === 1 && otherTasks.length === 0 && (
+          <div className="text-center py-4 text-sm text-[#9BA8AB]">
+            <p>No other tasks scheduled.</p>
+          </div>
+        )}
       </section>
     </div>
   );
