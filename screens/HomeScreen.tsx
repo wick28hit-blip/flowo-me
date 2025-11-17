@@ -27,44 +27,51 @@ const QuickActionButton: React.FC<{
   </button>
 );
 
-const GridTaskCard: React.FC<{ task: MaintenanceTask; propertyName: string }> = ({ task, propertyName }) => {
+const TaskGridCard: React.FC<{ 
+  task: MaintenanceTask; 
+  propertyName: string; 
+  onToggleTaskReminder: (taskId: string) => void;
+}> = ({ task, propertyName, onToggleTaskReminder }) => {
     const Icon = CategoryIcons[task.category];
     const daysRemaining = Math.ceil((new Date(task.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
     
     let dueText: string;
-    let dueTextColor = 'text-[#4A5C6A]';
+    let dueTextColor = 'text-[#9BA8AB]';
 
     if (daysRemaining < 0) {
         dueText = 'Overdue';
-        dueTextColor = 'text-red-500 font-semibold';
+        dueTextColor = 'text-red-400 font-semibold';
     } else if (daysRemaining === 0) {
-        dueText = 'Today';
-        dueTextColor = 'text-amber-500 font-semibold';
+        dueText = 'Due Today';
+        dueTextColor = 'text-amber-400 font-semibold';
     } else if (daysRemaining === 1) {
-        dueText = 'Tomorrow';
+        dueText = 'Due Tomorrow';
     } else {
-        dueText = `${daysRemaining} days`;
+        dueText = `Due in ${daysRemaining} days`;
     }
 
     return (
-        <div className="bg-white rounded-2xl p-3 flex flex-col justify-between shadow-sm border border-[#CCD0CF]/50 space-y-2">
-            <div className="flex items-start space-x-3">
-                <div className="w-10 h-10 bg-[#F0F2F5] rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Icon className="w-5 h-5 text-[#06141B]" />
+        <div className="bg-[#06141B] rounded-2xl p-4 flex flex-col justify-between text-white shadow-lg space-y-3 min-h-[160px]">
+            <div className="flex justify-between items-start">
+                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-5 h-5 text-white" />
                 </div>
-                <div>
-                    <p className="font-bold text-[#253745] leading-tight">{task.name}</p>
-                    <p className="text-xs text-[#9BA8AB]">{propertyName}</p>
-                </div>
+                <ToggleSwitch 
+                  isOn={!!task.reminderEnabled} 
+                  onToggle={() => onToggleTaskReminder(task.id)}
+                  aria-label={`Enable reminder for ${task.name}`}
+                />
+            </div>
+            <div className="flex-1">
+                <p className="font-bold text-white leading-tight">{task.name}</p>
+                <p className="text-sm text-[#9BA8AB]">{propertyName}</p>
             </div>
             <div className="text-right">
               <p className={`font-semibold text-sm ${dueTextColor}`}>{dueText}</p>
-              <p className="text-xs text-[#9BA8AB]">Due</p>
             </div>
         </div>
     );
 };
-
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, user, onSignOut, onToggleTaskReminder }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -82,39 +89,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
   );
   
   const sortedTasks = [...tasks].sort((a, b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime());
-  const nextTask = sortedTasks[0];
-  const otherTasks = sortedTasks.slice(1);
   const userName = user.displayName?.split(' ')[0] || 'User';
-  
-  const NextDueTaskCard = () => {
-    if (!nextTask) {
-        return null;
-    }
-    
-    const daysRemaining = Math.ceil((new Date(nextTask.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
-    const Icon = CategoryIcons[nextTask.category];
-
-    return (
-        <div className="bg-[#06141B] rounded-2xl p-5 flex flex-col justify-between h-40 text-white shadow-lg">
-            <div className="flex justify-between items-start">
-                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-white" />
-                </div>
-                <ToggleSwitch 
-                  isOn={!!nextTask.reminderEnabled} 
-                  onToggle={() => onToggleTaskReminder(nextTask.id)}
-                  aria-label={`Enable reminder for ${nextTask.name}`}
-                />
-            </div>
-            <div>
-                <h3 className="font-bold text-lg">{nextTask.name}</h3>
-                <p className="text-[#9BA8AB] text-sm">
-                    {daysRemaining > 1 ? `Due in ${daysRemaining} days` : daysRemaining === 1 ? 'Due tomorrow' : 'Due today'}
-                </p>
-            </div>
-        </div>
-    );
-  };
 
   return (
     <div className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto text-[#253745]">
@@ -196,25 +171,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         <h2 className="font-semibold">Task</h2>
         <hr className="border-t border-black my-0" />
         
-        <NextDueTaskCard />
-
         {tasks.length > 0 ? (
           <div className="grid grid-cols-2 gap-4">
-              {otherTasks.map(task => {
+              {sortedTasks.map(task => {
                 const propertyName = properties.find(p => p.id === task.propertyId)?.name || 'N/A';
-                return <GridTaskCard key={task.id} task={task} propertyName={propertyName} />;
+                return <TaskGridCard key={task.id} task={task} propertyName={propertyName} onToggleTaskReminder={onToggleTaskReminder} />;
               })}
           </div>
         ) : (
           <div className="text-center py-8 text-sm text-[#9BA8AB]">
             <p>No tasks found.</p>
-            <p className="text-xs text-[#CCD0CF] mt-1">Add one using the "Quick Actions" above.</p>
-          </div>
-        )}
-
-        {tasks.length === 1 && otherTasks.length === 0 && (
-          <div className="text-center py-4 text-sm text-[#9BA8AB]">
-            <p>No other tasks scheduled.</p>
+            <p className="text-xs mt-1">Add one using the "Quick Actions" above.</p>
           </div>
         )}
       </section>
