@@ -1,5 +1,4 @@
-
-export type Screen = 'home' | 'details' | 'add';
+export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login';
 
 export enum Category {
   FILTERS = 'Filters',
@@ -24,4 +23,11 @@ export interface Property {
   id: string;
   name: string;
   address: string;
+}
+
+export interface User {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
 }

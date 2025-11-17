@@ -1,18 +1,34 @@
-
-import React from 'react';
-import type { Screen, Property, MaintenanceTask } from '../types';
+import React, { useState } from 'react';
+import type { Screen, Property, MaintenanceTask, User } from '../types';
 import { Category } from '../types';
-import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons } from '../components/icons';
+import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons, SignOutIcon } from '../components/icons';
 import { MaintenancePieChart } from '../components/charts/MaintenanceCharts';
-import { userRecipients } from '../constants';
 
 interface HomeScreenProps {
   onNavigate: (screen: Screen, property?: Property) => void;
   properties: Property[];
   tasks: MaintenanceTask[];
+  user: User;
+  onSignOut: () => void;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks }) => {
+const QuickActionButton: React.FC<{
+  icon: React.ReactNode;
+  label: string;
+  onClick?: () => void;
+  isPrimary?: boolean;
+}> = ({ icon, label, onClick, isPrimary = false }) => (
+  <button onClick={onClick} className="flex flex-col items-center space-y-2 group" aria-label={label}>
+    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${isPrimary ? 'bg-black text-white' : 'bg-gray-200/80 text-black'}`}>
+      {icon}
+    </div>
+    <span className="text-xs font-medium text-gray-700">{label}</span>
+  </button>
+);
+
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, user, onSignOut }) => {
+  const [showSignOut, setShowSignOut] = useState(false);
   
   const PropertyCard: React.FC<{property: Property, isFirst: boolean}> = ({ property, isFirst }) => (
     <div className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-white flex flex-col justify-between relative overflow-hidden ${isFirst ? 'bg-black' : 'bg-zinc-800'}`}>
@@ -35,32 +51,33 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks }
     </div>
   );
   
-  const CategoryItem: React.FC<{category: Category, onClick: () => void}> = ({ category, onClick }) => {
-    const Icon = CategoryIcons[category];
-    return (
-      <div className="flex flex-col items-center space-y-2" onClick={onClick}>
-        <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
-          <Icon className="w-6 h-6 text-white"/>
-        </div>
-        <span className="text-xs">{category}</span>
-      </div>
-    );
-  };
-  
   const nextTask = tasks.sort((a,b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime())[0];
   const daysRemaining = nextTask ? Math.ceil((new Date(nextTask.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24)) : 0;
   const progress = nextTask ? Math.max(0, 100 - (daysRemaining / 30) * 100) : 0;
+  const userName = user.displayName?.split(' ')[0] || 'User';
 
   return (
     <div className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto">
       <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Hello Mufidul,</h1>
+          <h1 className="text-2xl font-bold">Hello {userName},</h1>
           <p className="text-gray-500">Welcome back!</p>
         </div>
         <div className="flex items-center space-x-4">
           <BellIcon className="w-6 h-6 text-gray-700" />
-          <img src="https://i.pravatar.cc/150?img=5" alt="User" className="w-9 h-9 rounded-full" />
+          <div className="relative">
+            <button onClick={() => setShowSignOut(!showSignOut)}>
+                <img src={user.photoURL || `https://i.pravatar.cc/150?u=${user.uid}`} alt="User" className="w-9 h-9 rounded-full" />
+            </button>
+            {showSignOut && (
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl z-10">
+                    <button onClick={onSignOut} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                        <SignOutIcon className="w-4 h-4" />
+                        <span>Sign Out</span>
+                    </button>
+                </div>
+            )}
+           </div>
         </div>
       </header>
 
@@ -91,15 +108,25 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks }
 
       <section>
         <h2 className="font-semibold mb-3">Quick Actions</h2>
-        <div className="flex justify-between items-center">
-            <button onClick={() => onNavigate('add')} className="flex flex-col items-center justify-center w-14 h-14 bg-gray-200/80 rounded-full">
-                <PlusIcon className="w-6 h-6" />
-            </button>
-            {userRecipients.map(user => (
-                <button key={user.name} className="flex flex-col items-center">
-                    <img src={user.img} alt={user.name} className="w-14 h-14 rounded-full border-2 border-white" />
-                </button>
-            ))}
+        <div className="flex justify-around items-start text-center">
+            <QuickActionButton 
+              icon={<PlusIcon className="w-6 h-6" />} 
+              label="Add Task" 
+              onClick={() => onNavigate('add')} 
+              isPrimary 
+            />
+            <QuickActionButton 
+              icon={<CategoryIcons.Plumbing className="w-6 h-6" />} 
+              label="Plumbing"
+            />
+            <QuickActionButton 
+              icon={<CategoryIcons.Electrical className="w-6 h-6" />} 
+              label="Electrical"
+            />
+            <QuickActionButton 
+              icon={<CategoryIcons.HVAC className="w-6 h-6" />} 
+              label="HVAC" 
+            />
         </div>
       </section>
       

@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface IconProps {
@@ -40,6 +39,60 @@ export const BarChartIcon: React.FC<IconProps> = ({ className }) => (
   </svg>
 );
 
+export const GoogleIcon: React.FC<IconProps> = ({ className }) => (
+    <svg className={className} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px">
+        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z" />
+        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z" />
+        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.222,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z" />
+        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.574l6.19,5.238C39.99,36.566,44,30.836,44,24C44,22.659,43.862,21.35,43.611,20.083z" />
+    </svg>
+);
+
+export const WrenchIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+    </svg>
+);
+
+export const PaintBrushIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M18.37 2.63L14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3z" />
+        <path d="M9 8c-2 3-4 3.5-7 4l8 8c.5-3 1-5 4-7" />
+        <path d="M14.5 17.5 4.5 7.5" />
+    </svg>
+);
+
+export const GearIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M12 20a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" />
+        <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
+        <path d="M12 2v2" /> <path d="M12 22v-2" />
+        <path d="m17 20.66-1-1.73" /> <path d="m8 4.07 1 1.73" />
+        <path d="m5 7-1.73-1" /> <path d="m20.66 17-1.73-1" />
+        <path d="M2 12h2" /> <path d="M22 12h-2" />
+        <path d="m6 18.93 1-1.73" /> <path d="m17 4.07-1 1.73" />
+        <path d="M4.07 17l1.73-1" /> <path d="M20.07 8l-1.73 1" />
+    </svg>
+);
+
+export const HammerIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="m15 12-8.373 8.373a1 1 0 1 1-1.414-1.414L12.586 12l.414-.414.414.414Z" />
+        <path d="M2 21h3v-3" />
+        <path d="m18 15 2-2a1 1 0 0 0 0-1.414l-4-4a1 1 0 0 0-1.414 0l-2 2" />
+        <path d="m15 12-2.293 2.293a1 1 0 0 1-1.414 0l-1-1a1 1 0 0 1 0-1.414L12.586 9.586" />
+    </svg>
+);
+
+export const SignOutIcon: React.FC<IconProps> = ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+        <polyline points="16 17 21 12 16 7"></polyline>
+        <line x1="21" y1="12" x2="9" y2="12"></line>
+    </svg>
+);
+
+
 export const CategoryIcons: Record<string, React.FC<IconProps>> = {
   Filters: ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -48,7 +101,9 @@ export const CategoryIcons: Record<string, React.FC<IconProps>> = {
   ),
   Plumbing: ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z" />
+      <path d="M18.8 3.2a2.3 2.3 0 0 0-3.2 0l-4.3 4.3c-.4.4-.7 1-.8 1.5l-1.5 6.1c-.2.7.4 1.4 1.2 1.2l6.1-1.5c.5-.1 1.1-.4 1.5-.8l4.3-4.3c.9-.9.9-2.3 0-3.2l-2.3-2.3z"/>
+      <path d="M5.4 15.6a2.3 2.3 0 0 0-3.2 0l-1 1a2.3 2.3 0 0 0 0 3.2l2.3 2.3c.9.9 2.3.9 3.2 0l1-1a2.3 2.3 0 0 0 0-3.2l-.1-.1"/>
+      <path d="m11 8 6 6"/>
     </svg>
   ),
   Electrical: ({ className }) => (

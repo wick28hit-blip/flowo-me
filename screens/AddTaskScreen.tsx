@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import type { Screen, Property, MaintenanceTask } from '../types';
+import type { Screen, Property, MaintenanceTask, User } from '../types';
 import { Category } from '../types';
 import { ChevronLeftIcon, BellIcon, PlusIcon } from '../components/icons';
 import { requestNotificationPermission } from '../utils/notifications';
@@ -9,9 +8,10 @@ interface AddTaskScreenProps {
   onNavigate: (screen: Screen) => void;
   onAddTask: (task: MaintenanceTask) => void;
   properties: Property[];
+  user: User;
 }
 
-const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, properties }) => {
+const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, properties, user }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(properties[0]?.id || '');
   const [taskName, setTaskName] = useState('');
   const [category, setCategory] = useState<Category>(Category.FILTERS);
@@ -82,7 +82,7 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
         <h1 className="text-lg font-bold">Add New Task</h1>
         <div className="flex items-center space-x-4">
           <BellIcon className="w-6 h-6" />
-          <img src="https://i.pravatar.cc/150?img=5" alt="User" className="w-9 h-9 rounded-full" />
+          <img src={user.photoURL || `https://i.pravatar.cc/150?u=${user.uid}`} alt="User" className="w-9 h-9 rounded-full" />
         </div>
       </header>
 

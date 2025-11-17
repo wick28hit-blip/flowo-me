@@ -1,6 +1,5 @@
-
 import React from 'react';
-import type { Screen, Property, MaintenanceTask } from '../types';
+import type { Screen, Property, MaintenanceTask, User } from '../types';
 import { Category } from '../types';
 import { ChevronLeftIcon, BellIcon, CategoryIcons } from '../components/icons';
 import { MaintenanceBarChart } from '../components/charts/MaintenanceCharts';
@@ -9,9 +8,10 @@ interface DetailsScreenProps {
   onNavigate: (screen: Screen) => void;
   property: Property | null;
   tasks: MaintenanceTask[];
+  user: User;
 }
 
-const DetailsScreen: React.FC<DetailsScreenProps> = ({ onNavigate, property, tasks }) => {
+const DetailsScreen: React.FC<DetailsScreenProps> = ({ onNavigate, property, tasks, user }) => {
   
   const GlassCard: React.FC<{children: React.ReactNode; className?: string}> = ({ children, className }) => (
     <div className={`bg-white/50 backdrop-blur-lg border border-white/20 rounded-2xl p-4 ${className}`}>
@@ -64,7 +64,7 @@ const DetailsScreen: React.FC<DetailsScreenProps> = ({ onNavigate, property, tas
         <h1 className="text-lg font-bold">Details</h1>
         <div className="flex items-center space-x-4">
           <BellIcon className="w-6 h-6 text-gray-700" />
-          <img src="https://i.pravatar.cc/150?img=5" alt="User" className="w-9 h-9 rounded-full" />
+          <img src={user.photoURL || `https://i.pravatar.cc/150?u=${user.uid}`} alt="User" className="w-9 h-9 rounded-full" />
         </div>
       </header>
       
