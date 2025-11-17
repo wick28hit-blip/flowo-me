@@ -1,4 +1,4 @@
-export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login' | 'addProperty';
+export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login' | 'addProperty' | 'profile';
 
 export enum Category {
   FILTERS = 'Filters',

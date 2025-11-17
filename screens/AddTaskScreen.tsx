@@ -61,14 +61,12 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
   };
   
   const PropertyCard: React.FC<{property: Property, isSelected: boolean, onClick: () => void}> = ({ property, isSelected, onClick }) => (
-    <button onClick={onClick} className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-white flex flex-col justify-between relative overflow-hidden transition-all duration-300 ${isSelected ? 'bg-black' : 'bg-zinc-800'}`}>
+    <button onClick={onClick} className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-white flex flex-col justify-end relative overflow-hidden transition-all duration-300 ring-2 ${isSelected ? 'ring-white' : 'ring-transparent'}`}>
+        <div className={`absolute inset-0 ${isSelected ? 'bg-black' : 'bg-zinc-800'}`}></div>
         <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full"></div>
         <div className="absolute -bottom-12 -right-2 w-28 h-28 bg-white/5 rounded-full"></div>
-        <div className="flex justify-between items-center">
-            <span className="font-semibold">{property.name}</span>
-        </div>
-        <div>
-            <div className="text-lg font-mono tracking-widest">**** **** **** 1234</div>
+        <div className="relative z-10 text-left">
+            <div className="font-semibold text-lg">{property.name}</div>
             <div className="text-xs text-gray-300">{property.address}</div>
         </div>
     </button>
@@ -98,13 +96,20 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
               </button>
             </div>
             <div className="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6">
-              {properties.map((prop) => 
-                <PropertyCard 
-                  key={prop.id} 
-                  property={prop} 
-                  isSelected={selectedPropertyId === prop.id}
-                  onClick={() => setSelectedPropertyId(prop.id)}
-                />
+              {properties.length > 0 ? (
+                properties.map((prop) => 
+                  <PropertyCard 
+                    key={prop.id} 
+                    property={prop} 
+                    isSelected={selectedPropertyId === prop.id}
+                    onClick={() => setSelectedPropertyId(prop.id)}
+                  />
+                )
+              ) : (
+                <div className="w-full h-32 flex flex-col items-center justify-center bg-zinc-700 rounded-2xl text-center text-white p-4">
+                    <p className="font-semibold">No properties found.</p>
+                    <p className="text-sm text-gray-300">Please add a property first.</p>
+                </div>
               )}
             </div>
           </section>
@@ -155,7 +160,10 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
           </div>
         </div>
 
-        <button onClick={handleSubmit} className="w-full bg-black text-white py-4 rounded-2xl font-bold text-lg mt-6">
+        <button 
+            onClick={handleSubmit} 
+            disabled={properties.length === 0}
+            className="w-full bg-black text-white py-4 rounded-2xl font-bold text-lg mt-6 disabled:bg-gray-400 disabled:cursor-not-allowed">
           Add Task
         </button>
       </div>

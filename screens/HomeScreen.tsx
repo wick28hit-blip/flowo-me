@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Screen, Property, MaintenanceTask, User, NavigationPayload } from '../types';
 import { Category } from '../types';
-import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons, SignOutIcon } from '../components/icons';
+import { BellIcon, PlusIcon, BarChartIcon, CategoryIcons, SignOutIcon, UserIcon } from '../components/icons';
 import { MaintenancePieChart } from '../components/charts/MaintenanceCharts';
 import { ToggleSwitch } from '../components/ToggleSwitch';
 
@@ -30,18 +30,15 @@ const QuickActionButton: React.FC<{
 
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, user, onSignOut, onToggleTaskReminder }) => {
-  const [showSignOut, setShowSignOut] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
   
   const PropertyCard: React.FC<{property: Property, isFirst: boolean}> = ({ property, isFirst }) => (
-    <div className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-white flex flex-col justify-between relative overflow-hidden ${isFirst ? 'bg-black' : 'bg-zinc-800'}`}>
+    <div className={`flex-shrink-0 w-[220px] h-32 rounded-2xl p-4 text-white flex flex-col justify-end relative overflow-hidden`}>
+        <div className={`absolute inset-0 ${isFirst ? 'bg-black' : 'bg-zinc-800'}`}></div>
         <div className="absolute -top-10 -right-10 w-28 h-28 bg-white/5 rounded-full"></div>
         <div className="absolute -bottom-12 -right-2 w-28 h-28 bg-white/5 rounded-full"></div>
-        <div className="flex justify-between items-center">
-            <span className="font-semibold">{property.name}</span>
-            <span className="text-xs font-mono bg-white/20 px-2 py-1 rounded">PRO</span>
-        </div>
-        <div>
-            <div className="text-lg font-mono tracking-widest">**** **** **** 1234</div>
+        <div className="relative z-10">
+            <div className="font-semibold text-lg">{property.name}</div>
             <div className="text-xs text-gray-300">{property.address}</div>
         </div>
     </div>
@@ -101,12 +98,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         <div className="flex items-center space-x-4">
           <BellIcon className="w-6 h-6 text-gray-700" />
           <div className="relative">
-            <button onClick={() => setShowSignOut(!showSignOut)}>
+            <button onClick={() => setShowUserMenu(!showUserMenu)}>
                 <img src={user.photoURL || `https://i.pravatar.cc/150?u=${user.uid}`} alt="User" className="w-9 h-9 rounded-full" />
             </button>
-            {showSignOut && (
-                <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-xl z-10">
-                    <button onClick={onSignOut} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+            {showUserMenu && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl z-10 overflow-hidden">
+                    <button onClick={() => { onNavigate('profile'); setShowUserMenu(false); }} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2">
+                        <UserIcon className="w-4 h-4" />
+                        <span>Profile</span>
+                    </button>
+                    <button onClick={onSignOut} className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center space-x-2 border-t">
                         <SignOutIcon className="w-4 h-4" />
                         <span>Sign Out</span>
                     </button>
@@ -125,7 +126,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
           </button>
         </div>
         <div className="flex space-x-4 overflow-x-auto pb-2 -mx-6 px-6">
-          {properties.map((prop, index) => <PropertyCard key={prop.id} property={prop} isFirst={index === 0} />)}
+           {properties.length > 0 ? (
+            properties.map((prop, index) => <PropertyCard key={prop.id} property={prop} isFirst={index === 0} />)
+          ) : (
+            <div className="w-full h-32 flex flex-col items-center justify-center bg-gray-100 rounded-2xl text-center p-4">
+                <p className="font-semibold text-gray-700">No properties yet.</p>
+                <p className="text-sm text-gray-500">Click "Add" to get started.</p>
+            </div>
+          )}
         </div>
       </section>
 

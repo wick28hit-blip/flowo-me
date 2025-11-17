@@ -8,17 +8,18 @@ import AddTaskScreen from './screens/AddTaskScreen';
 import SplashScreen from './screens/SplashScreen';
 import LoginScreen from './screens/LoginScreen';
 import AddPropertyScreen from './screens/AddPropertyScreen';
+import ProfileScreen from './screens/ProfileScreen';
+
 
 import type { Screen, Property, MaintenanceTask, User, Category, NavigationPayload } from './types';
-import { mockProperties, mockTasks } from './constants';
 import { scheduleNotification } from './utils/notifications';
 import { sendReminderEmail } from './utils/email';
 
 const App: React.FC = () => {
   const [screen, setScreen] = useState<Screen>('home');
-  const [properties, setProperties] = useState<Property[]>(mockProperties);
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(mockProperties[0]?.id || null);
-  const [tasks, setTasks] = useState<MaintenanceTask[]>(mockTasks);
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<MaintenanceTask[]>([]);
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [isSplashActive, setIsSplashActive] = useState(true);
   const [preselectedCategory, setPreselectedCategory] = useState<Category | null>(null);
@@ -83,6 +84,13 @@ const App: React.FC = () => {
     signOut(auth);
   }, []);
   
+  const handleUpdateUser = (updatedUserInfo: Partial<User>) => {
+    setUser(prevUser => {
+        if (!prevUser) return null;
+        return { ...prevUser, ...updatedUserInfo };
+    });
+  };
+  
   const handleToggleTaskReminder = (taskId: string) => {
     setTasks(prevTasks => {
       let taskToUpdate: MaintenanceTask | undefined;
@@ -115,6 +123,8 @@ const App: React.FC = () => {
         return <AddTaskScreen onNavigate={handleNavigate} onAddTask={handleAddTask} properties={properties} user={currentUser} preselectedCategory={preselectedCategory} />;
       case 'addProperty':
         return <AddPropertyScreen onNavigate={handleNavigate} onAddProperty={handleAddProperty} user={currentUser} />;
+      case 'profile':
+        return <ProfileScreen onNavigate={handleNavigate} user={currentUser} onUpdateUser={handleUpdateUser} />;
       default:
         return <HomeScreen onNavigate={handleNavigate} properties={properties} tasks={tasks} user={currentUser} onSignOut={handleSignOut} onToggleTaskReminder={handleToggleTaskReminder} />;
     }
