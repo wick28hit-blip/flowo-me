@@ -7,12 +7,13 @@ import { getAuth } from "firebase/auth";
 // scroll down to "Your apps", and select the web app. You'll find the config object there.
 // =================================================================================
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE",
-  authDomain: "YOUR_AUTH_DOMAIN_HERE",
-  projectId: "YOUR_PROJECT_ID_HERE",
-  storageBucket: "YOUR_STORAGE_BUCKET_HERE",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE",
-  appId: "YOUR_APP_ID_HERE"
+  apiKey: "AIzaSyC5DClYbT11FeFnohPUcWDYcvhKAFS0a1Q",
+  authDomain: "flowo-f25a2.firebaseapp.com",
+  projectId: "flowo-f25a2",
+  storageBucket: "flowo-f25a2.firebasestorage.app",
+  messagingSenderId: "16726807744",
+  appId: "1:16726807744:web:4e86c5e9015a8da6cd0925",
+  measurementId: "G-S8Q54XEZLH"
 };
 
 // Initialize Firebase
