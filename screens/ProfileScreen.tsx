@@ -79,7 +79,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ onNavigate, user, onUpdat
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-gray-100">
+    <div className="flex-1 flex flex-col bg-gray-100 min-h-0">
       <header className="flex items-center p-6 bg-white border-b sticky top-0 z-10">
         <button onClick={() => onNavigate('home')} className="p-2 -ml-2">
           <ChevronLeftIcon className="w-6 h-6" />

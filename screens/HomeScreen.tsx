@@ -28,6 +28,29 @@ const QuickActionButton: React.FC<{
   </button>
 );
 
+const TaskItem: React.FC<{ task: MaintenanceTask; propertyName: string }> = ({ task, propertyName }) => {
+    const Icon = CategoryIcons[task.category];
+    const daysRemaining = Math.ceil((new Date(task.nextDue).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+
+    return (
+        <div className="flex items-center justify-between py-3">
+            <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-black" />
+                </div>
+                <div>
+                    <p className="font-semibold">{task.name}</p>
+                    <p className="text-xs text-gray-500">{propertyName}</p>
+                </div>
+            </div>
+            <div className="text-right">
+              <p className="font-semibold text-sm">{daysRemaining > 1 ? `${daysRemaining} days` : daysRemaining === 1 ? 'Tomorrow' : 'Today'}</p>
+              <p className="text-xs text-gray-500">Due</p>
+            </div>
+        </div>
+     );
+};
+
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, user, onSignOut, onToggleTaskReminder }) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -50,7 +73,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
     </div>
   );
   
-  const nextTask = tasks.sort((a,b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime())[0];
+  const nextTask = [...tasks].sort((a,b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime())[0];
+  const recentTasks = [...tasks].sort((a, b) => parseInt(b.id.split('-')[1]) - parseInt(a.id.split('-')[1])).slice(0, 3);
   const userName = user.displayName?.split(' ')[0] || 'User';
   
   const NextDueTaskCard = () => {
@@ -58,7 +82,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         return (
             <div className="bg-gray-800 rounded-2xl p-5 flex flex-col justify-center items-center h-40 text-white">
                 <p className="font-semibold">No upcoming tasks!</p>
-                <p className="text-gray-400 text-sm">All caught up.</p>
+                <p className="text-gray-400 text-sm">Add a task to get started.</p>
             </div>
         )
     }
@@ -166,18 +190,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
         </div>
       </section>
       
-      <GlassCard className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-            <MaintenancePieChart tasks={tasks} />
-            <div>
-              <h3 className="font-bold">Maintenance Stats</h3>
-              <p className="text-xs text-gray-500">Overview of all tasks</p>
-            </div>
+       <section>
+        <h2 className="font-semibold mb-2">Recent Tasks</h2>
+        <div className="divide-y divide-gray-200 bg-white/80 rounded-2xl p-4">
+            {recentTasks.length > 0 ? (
+              recentTasks.map(task => {
+                const propertyName = properties.find(p => p.id === task.propertyId)?.name || 'N/A';
+                return <TaskItem key={task.id} task={task} propertyName={propertyName} />;
+              })
+            ) : (
+              <p className="text-sm text-gray-500 text-center py-4">No recent tasks. Add one using a quick action!</p>
+            )}
         </div>
-        <button onClick={() => onNavigate('details', { property: properties[0] })}>
-            <BarChartIcon className="w-8 h-8"/>
-        </button>
-      </GlassCard>
+      </section>
     </div>
   );
 };
