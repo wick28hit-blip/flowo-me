@@ -1,6 +1,10 @@
 import React from 'react';
 import { ArrowRightIcon } from '../components/icons';
 
+interface SplashScreenProps {
+  onContinue: () => void;
+}
+
 const TopoPattern: React.FC = () => (
     <svg width="100%" height="100%" className="absolute inset-0 opacity-[0.05]" preserveAspectRatio="none">
         <path d="M-20 40 Q 80 150, 250 80 T 500 80" stroke="white" strokeWidth="2" fill="none" />
@@ -12,11 +16,32 @@ const TopoPattern: React.FC = () => (
 );
 
 
-const SplashScreen: React.FC = () => {
+const SplashScreen: React.FC<SplashScreenProps> = ({ onContinue }) => {
   return (
     <div className="w-full h-full flex flex-col bg-[#F0F2F5] relative overflow-hidden">
-      <div className="absolute top-0 left-0 right-0 h-[55%] bg-[#253745]">
+        <style>
+        {`
+            @keyframes spin-in {
+                0% {
+                    transform: rotate(-360deg) scale(0);
+                    opacity: 0;
+                }
+                100% {
+                    transform: rotate(0deg) scale(1);
+                    opacity: 1;
+                }
+            }
+            .animate-spin-in {
+                animation: spin-in 1s ease-out 0.2s forwards;
+                opacity: 0;
+            }
+        `}
+        </style>
+      <div className="absolute top-0 left-0 right-0 h-[55%] bg-[#253745] flex items-center justify-center">
         <TopoPattern />
+        <h1 className="text-6xl font-bold text-white tracking-widest animate-spin-in" style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.3)' }}>
+            FLOWO
+        </h1>
       </div>
       <svg
         className="absolute top-[calc(55%-1px)] left-0 w-full"
@@ -25,24 +50,28 @@ const SplashScreen: React.FC = () => {
       >
         <path
           fill="#F0F2F5"
-          d="M0,96L48,117.3C96,139,192,181,288,181.3C384,181,480,139,576,112C672,85,768,75,864,90.7C960,107,1056,149,1152,170.7C1248,192,1344,192,1392,192L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+          d="M0,96 C480,200,960,80,1440,160 L1440,320 L0,320 Z"
         ></path>
       </svg>
 
       <div className="relative flex-1 flex flex-col justify-end p-8 pb-12">
-        <div className="w-full">
+        <div className="w-full mb-12">
             <h1 className="text-5xl font-bold text-[#253745] mb-4">Welcome</h1>
             <p className="text-[#4A5C6A] mb-8">
                 Manage your home maintenance <br /> with ease and confidence.
             </p>
-            <div className="flex justify-end">
-                <div className="flex items-center space-x-4 text-[#253745]">
-                    <span className="font-semibold">Continue</span>
-                    <div className="w-12 h-12 rounded-full bg-[#253745] text-white flex items-center justify-center">
-                        <ArrowRightIcon className="w-6 h-6" />
-                    </div>
+        </div>
+        <div className="flex justify-end">
+            <button 
+              onClick={onContinue} 
+              className="flex items-center space-x-4 text-[#253745] group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#F0F2F5] focus:ring-[#253745] rounded-full p-2"
+              aria-label="Continue to application"
+            >
+                <span className="font-semibold">Continue</span>
+                <div className="w-12 h-12 rounded-full bg-[#253745] text-white flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                    <ArrowRightIcon className="w-6 h-6" />
                 </div>
-            </div>
+            </button>
         </div>
       </div>
     </div>

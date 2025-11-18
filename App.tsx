@@ -41,15 +41,14 @@ const App: React.FC = () => {
       }
     });
 
-    const timer = setTimeout(() => {
-        setIsSplashActive(false);
-    }, 2500); // Splash screen duration
-
     return () => {
         unsubscribe();
-        clearTimeout(timer);
     };
   }, []);
+
+  const handleSplashContinue = () => {
+    setIsSplashActive(false);
+  };
 
   const handleNavigate = useCallback((newScreen: Screen, payload?: NavigationPayload) => {
     if (newScreen !== screen) {
@@ -159,7 +158,7 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     if (isSplashActive || user === undefined) {
-      return <SplashScreen />;
+      return <SplashScreen onContinue={handleSplashContinue} />;
     }
     if (user === null) {
       return <LoginScreen />;
