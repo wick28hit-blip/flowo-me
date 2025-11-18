@@ -19,11 +19,11 @@ const QuickActionButton: React.FC<{
   onClick?: () => void;
   isPrimary?: boolean;
 }> = ({ icon, label, onClick, isPrimary = false }) => (
-  <button onClick={onClick} className="flex flex-col items-center space-y-2 group" aria-label={label}>
+  <button onClick={onClick} className="flex flex-col items-center space-y-2 group w-16" aria-label={label}>
     <div className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${isPrimary ? 'bg-[#253745] text-white' : 'bg-[#CCD0CF] text-black'}`}>
       {icon}
     </div>
-    <span className="text-xs font-medium text-[#4A5C6A]">{label}</span>
+    <span className="text-xs font-medium text-[#4A5C6A] text-center">{label}</span>
   </button>
 );
 
@@ -54,7 +54,7 @@ const TaskGridCard: React.FC<{
             {/* Top Row */}
             <div className="flex justify-between items-start">
                 <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                    <Icon className="w-5 h-5 text-white" />
+                    {Icon ? <Icon className="w-5 h-5 text-white" /> : null}
                 </div>
                 <ToggleSwitch 
                   isOn={!!task.reminderEnabled} 
@@ -142,7 +142,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
 
       <section>
         <h2 className="font-semibold mb-3">Quick Actions</h2>
-        <div className="flex justify-around items-start text-center">
+        <div className="flex justify-between items-start text-center">
             <QuickActionButton 
               icon={<PlusIcon className="w-6 h-6" />} 
               label="Add Task" 
@@ -150,19 +150,24 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
               isPrimary 
             />
             <QuickActionButton 
-              icon={<CategoryIcons.Plumbing className="w-6 h-6" />} 
-              label="Plumbing"
-              onClick={() => onNavigate('add', { category: Category.PLUMBING })}
+              icon={<CategoryIcons['Plumber'] className="w-6 h-6" />} 
+              label="Plumber"
+              onClick={() => onNavigate('add', { category: Category.PLUMBER })}
             />
             <QuickActionButton 
-              icon={<CategoryIcons.Electrical className="w-6 h-6" />} 
-              label="Electrical"
-              onClick={() => onNavigate('add', { category: Category.ELECTRICAL })}
+              icon={<CategoryIcons['Electrician'] className="w-6 h-6" />} 
+              label="Electrician"
+              onClick={() => onNavigate('add', { category: Category.ELECTRICIAN })}
             />
             <QuickActionButton 
-              icon={<CategoryIcons.HVAC className="w-6 h-6" />} 
-              label="HVAC"
-              onClick={() => onNavigate('add', { category: Category.HVAC })}
+              icon={<CategoryIcons['Key Maker'] className="w-6 h-6" />} 
+              label="Key Maker"
+              onClick={() => onNavigate('add', { category: Category.KEY_MAKER })}
+            />
+             <QuickActionButton 
+              icon={<CategoryIcons['Property Inspection'] className="w-6 h-6" />} 
+              label="Inspection"
+              onClick={() => onNavigate('add', { category: Category.PROPERTY_INSPECTION })}
             />
         </div>
       </section>

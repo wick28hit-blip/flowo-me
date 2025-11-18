@@ -108,34 +108,64 @@ export const CalendarIcon: React.FC<IconProps> = ({ className }) => (
   </svg>
 );
 
+export const KeyMakerIcon: React.FC<IconProps> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="8" cy="15" r="4" />
+    <line x1="10.88" y1="12.12" x2="18" y2="5" />
+    <line x1="15" y1="8" x2="18" y2="5" />
+    <line x1="13" y1="10" x2="16" y2="7" />
+  </svg>
+);
+
+export const PropertyInspectionIcon: React.FC<IconProps> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M21.25 10.25a8.25 8.25 0 1 1-16.5 0 8.25 8.25 0 0 1 16.5 0Z" />
+    <path d="M10.25 15.25 4.75 20.75" />
+    <path d="m8.25 6.25 4 4" />
+  </svg>
+);
+
+export const CleaningIcon: React.FC<IconProps> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M3.5 11l7.071 7.071a1 1 0 0 0 1.414 0l1.414-1.414a1 1 0 0 0 0-1.414L6 8" />
+    <path d="M12 20l4-4" />
+    <path d="M18.5 2.5l-2.012 2.012a2.33 2.33 0 0 1-3.295 0L12 3.5" />
+    <path d="m15 6.5 1-1" />
+  </svg>
+);
+
+export const PestControlIcon: React.FC<IconProps> = ({ className }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M12 20h.01" />
+    <path d="M19.13 4.14a8.1 8.1 0 0 0-14.26 0" />
+    <path d="M5 10s2 2 7 0" />
+    <path d="M12 14c-4 0-4 3-4 3h8s0-3-4-3Z" />
+    <path d="M4 17h16" />
+    <path d="m10 7 4 6" />
+    <path d="m14 7-4 6" />
+  </svg>
+);
+
+
 export const CategoryIcons: Record<string, React.FC<IconProps>> = {
-  Filters: ({ className }) => (
+  'Water Filter': ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
   ),
-  Plumbing: ({ className }) => (
+  'Plumber': ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M18.8 3.2a2.3 2.3 0 0 0-3.2 0l-4.3 4.3c-.4.4-.7 1-.8 1.5l-1.5 6.1c-.2.7.4 1.4 1.2 1.2l6.1-1.5c.5-.1 1.1-.4 1.5-.8l4.3-4.3c.9-.9.9-2.3 0-3.2l-2.3-2.3z"/>
       <path d="M5.4 15.6a2.3 2.3 0 0 0-3.2 0l-1 1a2.3 2.3 0 0 0 0 3.2l2.3 2.3c.9.9 2.3.9 3.2 0l1-1a2.3 2.3 0 0 0 0-3.2l-.1-.1"/>
       <path d="m11 8 6 6"/>
     </svg>
   ),
-  Electrical: ({ className }) => (
+  'Electrician': ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2z" />
     </svg>
   ),
-  HVAC: ({ className }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-      <path d="M22 12h-4.2a2 2 0 0 0 -2 -2H8.2a2 2 0 0 0 -2 2H2" />
-      <path d="M2 12v-2a2 2 0 0 1 2 -2h16a2 2 0 0 1 2 2v2" />
-      <path d="M22 12v2a2 2 0 0 1 -2 2H4a2 2 0 0 1 -2 -2v-2" />
-      <path d="M12 16v.01" />
-      <path d="M12 8v.01" />
-    </svg>
-  ),
-   Appliances: ({ className }) => (
+  'Appliance Repair': ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M12 2v4" />
       <path d="M12 20v2" />
@@ -148,4 +178,9 @@ export const CategoryIcons: Record<string, React.FC<IconProps>> = {
       <path d="M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
     </svg>
   ),
+  'Key Maker': KeyMakerIcon,
+  'Property Inspection': PropertyInspectionIcon,
+  'Carpenter': HammerIcon,
+  'Deep Cleaning': CleaningIcon,
+  'Pest Control': PestControlIcon,
 };

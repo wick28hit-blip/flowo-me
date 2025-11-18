@@ -28,7 +28,8 @@ const UserAvatar: React.FC<{ user: User }> = ({ user }) => {
 const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, properties, user, preselectedCategory }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(properties[0]?.id || '');
   const [taskName, setTaskName] = useState('');
-  const [category, setCategory] = useState<Category>(preselectedCategory || Category.FILTERS);
+  // FIX: Corrected invalid enum member from Category.FILTERS to Category.WATER_FILTER
+  const [category, setCategory] = useState<Category>(preselectedCategory || Category.WATER_FILTER);
   const [lastCompletedDate, setLastCompletedDate] = useState(new Date().toISOString().split('T')[0]);
   const [dueDate, setDueDate] = useState('');
   const [lastBilledAmount, setLastBilledAmount] = useState('');

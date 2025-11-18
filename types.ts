@@ -1,11 +1,15 @@
 export type Screen = 'home' | 'details' | 'add' | 'splash' | 'login' | 'addProperty' | 'profile' | 'taskDetails';
 
 export enum Category {
-  FILTERS = 'Filters',
-  PLUMBING = 'Plumbing',
-  ELECTRICAL = 'Electrical',
-  HVAC = 'HVAC',
-  APPLIANCES = 'Appliances',
+  PLUMBER = 'Plumber',
+  ELECTRICIAN = 'Electrician',
+  KEY_MAKER = 'Key Maker',
+  PROPERTY_INSPECTION = 'Property Inspection',
+  WATER_FILTER = 'Water Filter',
+  APPLIANCE_REPAIR = 'Appliance Repair',
+  CARPENTER = 'Carpenter',
+  DEEP_CLEANING = 'Deep Cleaning',
+  PEST_CONTROL = 'Pest Control',
 }
 
 export interface MaintenanceTask {
