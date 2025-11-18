@@ -5,10 +5,11 @@ export enum Category {
   ELECTRICIAN = 'Electrician',
   KEY_MAKER = 'Key Maker',
   PROPERTY_INSPECTION = 'Property Inspection',
-  WATER_FILTER = 'Water Filter',
-  APPLIANCE_REPAIR = 'Appliance Repair',
+  WATER_FILTER = 'Water Filter Upgrade/Change',
+  FRIDGE_REPAIR = 'Fridge Repair',
+  WASHING_MACHINE_REPAIR = 'Washing Machine Repair',
   CARPENTER = 'Carpenter',
-  DEEP_CLEANING = 'Deep Cleaning',
+  DEEP_CLEANING = 'Full House Deep Cleaning',
   PEST_CONTROL = 'Pest Control',
 }
 

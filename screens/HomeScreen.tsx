@@ -77,6 +77,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
   const sortedTasks = [...tasks].sort((a, b) => new Date(a.nextDue).getTime() - new Date(b.nextDue).getTime());
   const userName = user.displayName?.split(' ')[0] || 'User';
 
+  const PlumberIcon = CategoryIcons[Category.PLUMBER];
+  const ElectricianIcon = CategoryIcons[Category.ELECTRICIAN];
+  const KeyMakerIcon = CategoryIcons[Category.KEY_MAKER];
+  const PropertyInspectionIcon = CategoryIcons[Category.PROPERTY_INSPECTION];
+
   return (
     <div className="flex-1 flex flex-col p-6 space-y-6 overflow-y-auto text-[#253745]">
       <header className="flex justify-between items-center">
@@ -150,22 +155,22 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate, properties, tasks, 
               isPrimary 
             />
             <QuickActionButton 
-              icon={<CategoryIcons['Plumber'] className="w-6 h-6" />} 
+              icon={<PlumberIcon className="w-6 h-6" />} 
               label="Plumber"
               onClick={() => onNavigate('add', { category: Category.PLUMBER })}
             />
             <QuickActionButton 
-              icon={<CategoryIcons['Electrician'] className="w-6 h-6" />} 
+              icon={<ElectricianIcon className="w-6 h-6" />} 
               label="Electrician"
               onClick={() => onNavigate('add', { category: Category.ELECTRICIAN })}
             />
             <QuickActionButton 
-              icon={<CategoryIcons['Key Maker'] className="w-6 h-6" />} 
+              icon={<KeyMakerIcon className="w-6 h-6" />} 
               label="Key Maker"
               onClick={() => onNavigate('add', { category: Category.KEY_MAKER })}
             />
              <QuickActionButton 
-              icon={<CategoryIcons['Property Inspection'] className="w-6 h-6" />} 
+              icon={<PropertyInspectionIcon className="w-6 h-6" />} 
               label="Inspection"
               onClick={() => onNavigate('add', { category: Category.PROPERTY_INSPECTION })}
             />

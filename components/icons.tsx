@@ -148,7 +148,7 @@ export const PestControlIcon: React.FC<IconProps> = ({ className }) => (
 
 
 export const CategoryIcons: Record<string, React.FC<IconProps>> = {
-  'Water Filter': ({ className }) => (
+  'Water Filter Upgrade/Change': ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
     </svg>
@@ -165,7 +165,20 @@ export const CategoryIcons: Record<string, React.FC<IconProps>> = {
       <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2z" />
     </svg>
   ),
-  'Appliance Repair': ({ className }) => (
+  'Fridge Repair': ({ className }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <path d="M12 2v4" />
+      <path d="M12 20v2" />
+      <path d="M5 12H2" />
+      <path d="M22 12h-3" />
+      <path d="M18.36 18.36l-2.12-2.12" />
+      <path d="M7.76 7.76L5.64 5.64" />
+      <path d="M18.36 5.64l-2.12 2.12" />
+      <path d="M7.76 16.24l-2.12 2.12" />
+      <path d="M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+    </svg>
+  ),
+  'Washing Machine Repair': ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M12 2v4" />
       <path d="M12 20v2" />
@@ -181,6 +194,6 @@ export const CategoryIcons: Record<string, React.FC<IconProps>> = {
   'Key Maker': KeyMakerIcon,
   'Property Inspection': PropertyInspectionIcon,
   'Carpenter': HammerIcon,
-  'Deep Cleaning': CleaningIcon,
+  'Full House Deep Cleaning': CleaningIcon,
   'Pest Control': PestControlIcon,
 };

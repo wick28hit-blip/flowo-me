@@ -28,7 +28,6 @@ const UserAvatar: React.FC<{ user: User }> = ({ user }) => {
 const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, properties, user, preselectedCategory }) => {
   const [selectedPropertyId, setSelectedPropertyId] = useState(properties[0]?.id || '');
   const [taskName, setTaskName] = useState('');
-  // FIX: Corrected invalid enum member from Category.FILTERS to Category.WATER_FILTER
   const [category, setCategory] = useState<Category>(preselectedCategory || Category.WATER_FILTER);
   const [lastCompletedDate, setLastCompletedDate] = useState(new Date().toISOString().split('T')[0]);
   const [dueDate, setDueDate] = useState('');
@@ -36,6 +35,16 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [reminderDateTime, setReminderDateTime] = useState('');
 
+  const addTaskCategories = [
+    Category.WATER_FILTER,
+    Category.FRIDGE_REPAIR,
+    Category.WASHING_MACHINE_REPAIR,
+    Category.PLUMBER,
+    Category.CARPENTER,
+    Category.DEEP_CLEANING,
+    Category.PEST_CONTROL,
+  ];
+  
   const handleToggleNotifications = async () => {
     if (!notificationsEnabled) { // Toggling ON
       const permissionGranted = await requestNotificationPermission();
@@ -141,7 +150,8 @@ const AddTaskScreen: React.FC<AddTaskScreenProps> = ({ onNavigate, onAddTask, pr
                 <div>
                   <label htmlFor="category" className="text-sm font-semibold text-gray-500 mb-1 block">Category</label>
                   <select id="category" value={category} onChange={e => setCategory(e.target.value as Category)} className="w-full p-3 bg-gray-100 border border-gray-200 rounded-lg focus:ring-[#06141B] focus:border-[#06141B] focus:bg-white">
-                    {Object.values(Category).map(cat => <option key={cat} value={cat}>{cat}</option>)}
+                    {preselectedCategory && !addTaskCategories.includes(preselectedCategory) && <option key={preselectedCategory} value={preselectedCategory}>{preselectedCategory}</option>}
+                    {addTaskCategories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                   </select>
                 </div>
                 <div>
